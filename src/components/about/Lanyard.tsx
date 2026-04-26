@@ -13,8 +13,8 @@ import {
 } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
-import cardGLB from '../../assets/lanyard/card.glb';
-import lanyard from '../../assets/lanyard/lanyard.png';
+import cardGLB from '../../assets/lanyard/card.glb?url';
+import lanyard from '../../assets/lanyard/lanyard.png?url';
 import './Lanyard.css';
 
 // Adapted from React Bits Lanyard. The physics contract stays close to the
@@ -257,7 +257,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, profile }: BandPr
           <BallCollider args={[0.1]} />
         </RigidBody>
         <RigidBody ref={card} position={[2, 0, 0]} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
-          <CuboidCollider args={[0.8, 1.125, 0.01]} />
+          <CuboidCollider args={[1.02, 1.43, 0.01]} />
           <group
             onPointerDown={(event: any) => {
               event.stopPropagation();
@@ -271,8 +271,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, profile }: BandPr
               event.target.releasePointerCapture(event.pointerId);
               drag(false);
             }}
-            position={[0, -1.2, -0.05]}
-            scale={2.25}
+            position={[0, -1.05, -0.05]}
+            scale={2.88}
           >
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial

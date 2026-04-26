@@ -53,11 +53,11 @@ export default function AboutSection() {
   return (
     <section className="about-section" id="about" ref={rootRef}>
       <div className="about-grid">
-        <div className="about-reveal">
-          <AboutCopy />
-        </div>
         <div className="about-reveal about-cards-panel">
           <TeamCards />
+        </div>
+        <div className="about-reveal about-copy-panel">
+          <AboutCopy />
         </div>
       </div>
     </section>

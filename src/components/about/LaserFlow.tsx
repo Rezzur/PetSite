@@ -79,13 +79,21 @@ void main() {
   float x = uv.x / horizontalRange;
   float y = uv.y / verticalRange;
 
-  float verticalMask = smoothstep(-1.03, -0.62, y) * (1.0 - smoothstep(0.62, 1.03, y));
+  float verticalMask = smoothstep(-1.08, -0.76, y) * (1.0 - smoothstep(0.72, 1.08, y));
   float edgeFalloff = pow(1.0 - smoothstep(0.0, uFalloffStart, abs(y)), max(0.18, uDecay));
   float flow = 0.78 + sin((y * 12.0) - uTime * 2.2) * uFlowStrength;
 
-  float core = exp(-abs(x) * 34.0) * flow;
-  float halo = exp(-abs(x) * 11.0) * 0.18;
-  float fog = fbm(vec2(x * 8.0 + uTime * 0.05, y * 6.0 - uTime * 0.18) * max(0.04, uFogScale) * 10.0);
+  float bottomBloom = 1.0 - smoothstep(-0.92, 0.12, y);
+  float topTaper = 1.0 - smoothstep(0.34, 1.02, y);
+  float spread = 1.0 + bottomBloom * 2.35;
+  float beamX = x / spread;
+
+  float core = exp(-abs(beamX) * 30.0) * flow;
+  float halo = exp(-abs(beamX) * 7.0) * (0.16 + bottomBloom * 0.42);
+  float floorLine = exp(-abs(y + 0.86) * 42.0) * exp(-abs(x) * 0.95);
+  float floorGlow = exp(-abs(y + 0.84) * 7.0) * exp(-abs(x) * 1.35) * 0.72;
+  float rebound = exp(-abs(y + 0.68) * 4.2) * exp(-abs(x) * 2.2) * 0.18;
+  float fog = fbm(vec2(x * 5.0 + uTime * 0.05, y * 4.6 - uTime * 0.18) * max(0.04, uFogScale) * 10.0);
 
   float lanes = 0.0;
   float density = clamp(uWispDensity, 1.0, 8.0);
@@ -101,9 +109,9 @@ void main() {
     lanes += lane * segment;
   }
 
-  float energy = (core + halo + fog * 0.035 + lanes * 0.012 * uWispIntensity) * verticalMask;
-  float alpha = clamp(energy * edgeFalloff * 0.46, 0.0, 0.42);
-  vec3 color = uColor * (0.52 + energy * 0.48);
+  float energy = (core + halo + floorGlow + floorLine + rebound + fog * 0.052 + lanes * 0.014 * uWispIntensity) * verticalMask * topTaper;
+  float alpha = clamp(energy * edgeFalloff * 0.56, 0.0, 0.62);
+  vec3 color = uColor * (0.5 + energy * 0.55);
 
   gl_FragColor = vec4(color, alpha);
 }

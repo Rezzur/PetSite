@@ -8,6 +8,7 @@ function StaticLaserDivider() {
     <div className="about-laser-divider about-laser-divider--static" aria-hidden="true">
       <span className="about-laser-divider__rail" />
       <span className="about-laser-divider__core" />
+      <span className="about-laser-divider__impact" />
     </div>
   );
 }
@@ -23,20 +24,21 @@ export default function AboutLaserDivider() {
   return (
     <div className="about-laser-divider" aria-hidden="true">
       <span className="about-laser-divider__rail" />
+      <span className="about-laser-divider__impact" />
       <Suspense fallback={<span className="about-laser-divider__core" />}>
         <LaserFlow
           color="#ffffff"
-          decay={0.72}
+          decay={0.56}
           dpr={1}
-          falloffStart={0.96}
-          flowStrength={0.22}
-          fogScale={0.055}
-          horizontalSizing={0.74}
+          falloffStart={1.16}
+          flowStrength={0.32}
+          fogScale={0.095}
+          horizontalSizing={1.05}
           onSceneError={() => setSceneFailed(true)}
-          verticalSizing={4.35}
-          wispDensity={3.2}
-          wispIntensity={7.5}
-          wispSpeed={9.5}
+          verticalSizing={5.2}
+          wispDensity={4.6}
+          wispIntensity={14}
+          wispSpeed={12.5}
         />
       </Suspense>
     </div>

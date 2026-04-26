@@ -45,10 +45,10 @@ export default function TeamCards() {
           <article className="team-lanyard-card" key={profiles[0].id} aria-labelledby={`${profiles[0].id}-lanyard-name`}>
             <Suspense fallback={<div className="team-lanyard-loading" aria-hidden="true">[ loading lanyard badge ]</div>}>
               <ReactBitsLanyard
-                fov={21}
+                fov={19}
                 gravity={[0, -40, 0]}
                 onSceneError={() => setSceneFailed(true)}
-                position={[0, 0, 17.5]}
+                position={[0, 0, 13.5]}
                 profile={profiles[0]}
               />
             </Suspense>
@@ -65,10 +65,10 @@ export default function TeamCards() {
           <article className="team-lanyard-card" key={profiles[1].id} aria-labelledby={`${profiles[1].id}-lanyard-name`}>
             <Suspense fallback={<div className="team-lanyard-loading" aria-hidden="true">[ loading lanyard badge ]</div>}>
               <ReactBitsLanyard
-                fov={21}
+                fov={19}
                 gravity={[0, -40, 0]}
                 onSceneError={() => setSceneFailed(true)}
-                position={[0, 0, 17.5]}
+                position={[0, 0, 13.5]}
                 profile={profiles[1]}
               />
             </Suspense>

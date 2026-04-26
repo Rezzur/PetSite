@@ -5,7 +5,17 @@ declare module '*.glb' {
   export default source;
 }
 
+declare module '*.glb?url' {
+  const source: string;
+  export default source;
+}
+
 declare module '*.png' {
+  const source: string;
+  export default source;
+}
+
+declare module '*.png?url' {
   const source: string;
   export default source;
 }
