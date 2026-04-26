@@ -1,0 +1,7 @@
+[     390ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5178/node_modules/.vite/deps/chunk-CFPBSYCA.js?v=4ea17e12:19834
+[     820ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://127.0.0.1:5178/node_modules/.vite/deps/chunk-3URX5CU3.js?v=4ea17e12:746
+[     887ms] [WARNING] using deprecated parameters for the initialization function; pass a single object instead @ http://127.0.0.1:5178/node_modules/.vite/deps/chunk-LLEILHP5.js?v=4ea17e12:2516
+[    8560ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5178/node_modules/.vite/deps/chunk-CFPBSYCA.js?v=4ea17e12:19834
+[    8934ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://127.0.0.1:5178/node_modules/.vite/deps/chunk-3URX5CU3.js?v=4ea17e12:746
+[    8954ms] [WARNING] using deprecated parameters for the initialization function; pass a single object instead @ http://127.0.0.1:5178/node_modules/.vite/deps/chunk-LLEILHP5.js?v=4ea17e12:2516
+[   17724ms] [ERROR] Unable to preventDefault inside passive event listener invocation. @ http://127.0.0.1:5178/node_modules/.vite/deps/chunk-CFPBSYCA.js?v=4ea17e12:2435

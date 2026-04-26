@@ -1,0 +1,99 @@
+- generic [ref=e3]:
+  - link "Перейти к блоку о нас" [ref=e4] [cursor=pointer]:
+    - /url: "#about"
+  - main [ref=e5]:
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - paragraph [ref=e10]: ASCII DIGITAL STUDIO / TWO-PERSON SYSTEM
+        - generic [ref=e11]:
+          - heading "SMIRNOV × ZRYANOV" [level=1] [ref=e12]:
+            - generic [ref=e13]: SMIRNOV × ZRYANOV
+            - generic [ref=e14]:
+              - generic [ref=e15]:
+                - generic [ref=e16]: S
+                - generic [ref=e17]: M
+                - generic [ref=e18]: I
+                - generic [ref=e19]: R
+                - generic [ref=e20]: "N"
+                - generic [ref=e21]: O
+                - generic [ref=e22]: V
+              - generic [ref=e23]: ×
+              - generic [ref=e24]:
+                - generic [ref=e25]: Z
+                - generic [ref=e26]: R
+                - generic [ref=e27]: "Y"
+                - generic [ref=e28]: A
+                - generic [ref=e29]: "N"
+                - generic [ref=e30]: O
+                - generic [ref=e31]: V
+          - generic:
+            - generic: .
+            - generic: ":"
+            - generic: "*"
+            - generic: ;
+            - generic: "-"
+            - generic: ":"
+            - generic: _
+            - generic: ":"
+            - generic: +
+            - generic: "{"
+            - generic: /
+            - generic: ":"
+            - generic: "["
+            - generic: .
+            - generic: \
+            - generic: _
+            - generic: "{"
+            - generic: ;
+            - generic: "]"
+            - generic: x
+            - generic: ":"
+            - generic: "{"
+        - generic "Системный запуск" [ref=e32]:
+          - paragraph [ref=e33]: "> SYSTEM BOOT"
+          - paragraph [ref=e34]:
+            - generic [ref=e35]: "> initializing ascii layer"
+            - generic [ref=e36]: "[ OK ]"
+          - paragraph [ref=e37]:
+            - generic [ref=e38]: "> loading identity"
+            - generic [ref=e39]: "[ .. ]"
+        - paragraph [ref=e42]:
+          - generic [ref=e43]: _
+        - paragraph [ref=e44]:
+          - generic [ref=e45]: _
+        - generic [ref=e46]:
+          - link "Обсудить проект" [ref=e49] [cursor=pointer]:
+            - /url: "#about"
+            - generic [ref=e52]: Обсудить проект
+          - link "Смотреть работы" [ref=e55] [cursor=pointer]:
+            - /url: "#about"
+            - generic [ref=e58]: Смотреть работы
+      - button "[ scroll ]" [ref=e59] [cursor=pointer]
+    - generic [ref=e61]:
+      - generic [ref=e63]:
+        - paragraph [ref=e64]: "[ О НАС ]"
+        - heading "Два человека. Один цельный процесс." [level=2] [ref=e65]
+        - paragraph [ref=e66]: Мы — небольшая команда из двух человек. Соединяем разработку, интерфейсы и визуальную систему, чтобы быстро превращать идеи в понятные цифровые продукты.
+        - generic "Рабочая система команды" [ref=e67]:
+          - generic [ref=e68]: 01 / идея становится структурой _
+          - generic [ref=e69]: 02 / структура становится интерфейсом _
+          - generic [ref=e70]: 03 / интерфейс становится продуктом _
+      - generic "Карточки участников команды" [ref=e72]:
+        - article [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]: SS
+            - generic [ref=e76]: const role = "architecture";
+            - generic [ref=e77]: render(system.logic)
+            - generic [ref=e78]: "status: ONLINE"
+          - generic [ref=e79]:
+            - generic [ref=e81]: "ID: 01"
+            - heading "SERGEY SMIRNOV" [level=3] [ref=e82]
+            - paragraph [ref=e83]: Разработка · Архитектура · Логика
+        - article [ref=e84]:
+          - img "YAN ZRYANOV portrait" [ref=e85]
+          - generic [ref=e86]:
+            - generic [ref=e88]: "ID: 02"
+            - heading "YAN ZRYANOV" [level=3] [ref=e89]
+            - paragraph [ref=e90]: Интерфейсы · Дизайн · Визуал
+    - region "Следующие модули" [ref=e91]:
+      - generic [ref=e92]: "[ next modules pending ]"
