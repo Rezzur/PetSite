@@ -48,6 +48,23 @@ export default function ReactiveAsciiBackground() {
     let rows = 0;
     let lastFrame = 0;
 
+    const getWordmarkMask = () => {
+      const wordmark = document.querySelector<HTMLElement>('.wordmark-visual');
+      if (!wordmark) return null;
+
+      const canvasRect = canvas.getBoundingClientRect();
+      const wordmarkRect = wordmark.getBoundingClientRect();
+      const padX = width < 680 ? 12 : 22;
+      const padY = width < 680 ? 8 : 14;
+
+      return {
+        left: wordmarkRect.left - canvasRect.left - padX,
+        right: wordmarkRect.right - canvasRect.left + padX,
+        top: wordmarkRect.top - canvasRect.top - padY,
+        bottom: wordmarkRect.bottom - canvasRect.top + padY
+      };
+    };
+
     const buildCells = () => {
       cellsRef.current = [];
       for (let row = 0; row < rows; row += 1) {
@@ -101,8 +118,18 @@ export default function ReactiveAsciiBackground() {
       ctx.clearRect(0, 0, width, height);
       ctx.font = `${width < 680 ? 11 : 12}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
       ctx.textBaseline = 'middle';
+      const wordmarkMask = getWordmarkMask();
 
       for (const cell of cellsRef.current) {
+        const maskedByWordmark =
+          wordmarkMask &&
+          cell.x >= wordmarkMask.left &&
+          cell.x <= wordmarkMask.right &&
+          cell.y >= wordmarkMask.top &&
+          cell.y <= wordmarkMask.bottom;
+
+        if (maskedByWordmark) continue;
+
         if (!reducedMotion && now > cell.nextAt) {
           cell.char = randomChar();
           cell.nextAt = now + 850 + Math.random() * (width < 680 ? 4200 : 2600);

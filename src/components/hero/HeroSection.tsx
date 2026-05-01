@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { usePointer } from '../../hooks/usePointer';
@@ -8,17 +8,71 @@ import PixelBurstFromCross from './PixelBurstFromCross';
 import PixelTransitionButton from './PixelTransitionButton';
 import ReactiveAsciiBackground from './ReactiveAsciiBackground';
 import ShapeGrid from './ShapeGrid';
-import { brand } from '../../data/brand';
-import { scrollToPageSection } from '../../utils/scroll';
+import TextType from './TextType';
 
 gsap.registerPlugin(useGSAP);
 
+const heroTypePhrases = [
+  'Мы создаем сайты. 🌐',
+  'Мы делаем приложения. 📱',
+  'Мы проектируем интерфейсы. 🖥️',
+  'Мы создаем цифровой дизайн. ✨',
+  'Мы собираем понятные продукты. 🚀'
+];
+
+const scrollLockKeys = new Set([' ', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp']);
+
+function lockInitialScroll() {
+  const html = document.documentElement;
+  const body = document.body;
+  const lockedY = window.scrollY;
+  let frame = 0;
+
+  const preventScroll = (event: Event) => {
+    event.preventDefault();
+  };
+
+  const preventScrollKey = (event: KeyboardEvent) => {
+    const target = event.target instanceof HTMLElement ? event.target : null;
+    const editableTarget = target?.closest('input, textarea, select, [contenteditable="true"]');
+
+    if (editableTarget || event.altKey || event.ctrlKey || event.metaKey || !scrollLockKeys.has(event.key)) return;
+
+    event.preventDefault();
+  };
+
+  const keepLockedPosition = () => {
+    if (frame) return;
+
+    frame = window.requestAnimationFrame(() => {
+      frame = 0;
+      if (window.scrollY !== lockedY) window.scrollTo({ top: lockedY, left: 0, behavior: 'auto' });
+    });
+  };
+
+  html.classList.add('is-hero-scroll-locked');
+  body.classList.add('is-hero-scroll-locked');
+  window.addEventListener('wheel', preventScroll, { passive: false });
+  window.addEventListener('touchmove', preventScroll, { passive: false });
+  window.addEventListener('keydown', preventScrollKey);
+  window.addEventListener('scroll', keepLockedPosition, { passive: true });
+
+  return () => {
+    html.classList.remove('is-hero-scroll-locked');
+    body.classList.remove('is-hero-scroll-locked');
+    window.removeEventListener('wheel', preventScroll);
+    window.removeEventListener('touchmove', preventScroll);
+    window.removeEventListener('keydown', preventScrollKey);
+    window.removeEventListener('scroll', keepLockedPosition);
+    if (frame) window.cancelAnimationFrame(frame);
+  };
+}
+
 export default function HeroSection() {
   const rootRef = useRef<HTMLElement | null>(null);
+  const [isHeroTextActive, setIsHeroTextActive] = useState(false);
+  const [showWordmarkBurst, setShowWordmarkBurst] = useState(true);
   const { reducedMotion } = usePointer();
-  const scrollToAbout = () => {
-    scrollToPageSection('#about', reducedMotion ? 'auto' : 'smooth');
-  };
 
   useEffect(() => {
     const root = rootRef.current;
@@ -64,24 +118,28 @@ export default function HeroSection() {
         ? {
             terminal: 0.22,
             boot: 0.42,
-            commands: 0.9,
-            cross: 1.7,
-            letters: 1.88,
-            stabilize: 2.34,
-            layout: 2.58,
-            flight: 2.82,
-            end: 3.16
+            progress: 0.72,
+            progressEnd: 3.68,
+            commands: 1.06,
+            post: 3.88,
+            cross: 4.4,
+            letters: 4.72,
+            stabilize: 5.16,
+            layout: 5.56,
+            end: 6.08
           }
         : {
             terminal: 0.35,
-            boot: 0.65,
-            commands: 1.34,
-            cross: 2.52,
-            letters: 2.78,
-            stabilize: 3.38,
-            layout: 3.72,
-            flight: 4.02,
-            end: 4.56
+            boot: 0.88,
+            progress: 1.1,
+            progressEnd: 4.86,
+            commands: 2.02,
+            post: 5.08,
+            cross: 5.86,
+            letters: 6.28,
+            stabilize: 6.88,
+            layout: 7.32,
+            end: 8.08
           };
       const identity = root.querySelector<HTMLElement>('.hero-identity');
       const copy = root.querySelector<HTMLElement>('.hero-copy');
@@ -89,9 +147,13 @@ export default function HeroSection() {
       const introCommand = root.querySelector<HTMLElement>('[data-terminal-command="boot"]');
       const introCursor = root.querySelector<HTMLElement>('.terminal-cursor');
       const commandLines = gsap.utils.toArray<HTMLElement>('.terminal-line--command', root);
+      const postLines = gsap.utils.toArray<HTMLElement>('.terminal-line--post', root);
       const terminalTexts = gsap.utils.toArray<HTMLElement>('.terminal-text', root);
       const terminalStatuses = gsap.utils.toArray<HTMLElement>('.terminal-status', root);
-      let flightClone: HTMLElement | null = null;
+      const terminalProgress = root.querySelector<HTMLElement>('.terminal-progress-line');
+      const terminalProgressFill = root.querySelector<HTMLElement>('.terminal-progress-fill');
+      const terminalProgressValue = root.querySelector<HTMLElement>('.terminal-progress-value');
+      let releaseInitialScroll: (() => void) | undefined;
 
       const getIntroTransform = () => {
         if (!identity || mobile) return { x: 0, y: 0, scale: 1 };
@@ -114,9 +176,12 @@ export default function HeroSection() {
       };
 
       const finalizeHero = () => {
-        const finalLayout = getIntroTransform();
+        releaseInitialScroll?.();
+        releaseInitialScroll = undefined;
         root.classList.remove('is-intro');
         root.classList.add('is-ready');
+        setIsHeroTextActive(true);
+        setShowWordmarkBurst(false);
         letters.forEach((letter) => {
           letter.textContent = letter.dataset.final ?? letter.textContent;
           letter.style.opacity = '1';
@@ -133,11 +198,8 @@ export default function HeroSection() {
         gsap.set(root.querySelector('.crt-stage-shell'), { clipPath: 'inset(0% 0% 0% 0%)' });
         gsap.set(root.querySelector('.crt-power-line'), { opacity: 0, scaleX: 1 });
         gsap.set(root.querySelector('.wordmark-visual'), { x: 0, filter: 'blur(0px)' });
-        gsap.set(root.querySelector('.scroll-hint'), { opacity: 1 });
-        gsap.set(document.querySelector<HTMLElement>('[data-brand-target], .top-ascii-bar__brand'), { clearProps: 'opacity,visibility' });
-        flightClone?.remove();
-        flightClone = null;
-        root.style.setProperty('--intro-x', `${finalLayout.x}px`);
+        gsap.set(terminalProgressFill, { scaleX: 1 });
+        if (terminalProgressValue) terminalProgressValue.textContent = '100%';
       };
 
       if (reducedMotion) {
@@ -149,9 +211,12 @@ export default function HeroSection() {
         defaults: { ease: 'power3.out' }
       });
       const introTransform = getIntroTransform();
+      releaseInitialScroll = lockInitialScroll();
 
       root.classList.add('is-intro');
       root.classList.remove('is-ready');
+      setIsHeroTextActive(false);
+      setShowWordmarkBurst(true);
       gsap.set(root.querySelectorAll('.hero-entrance'), { opacity: 0, y: 12 });
       gsap.set(identity, {
         autoAlpha: 0,
@@ -165,6 +230,10 @@ export default function HeroSection() {
       gsap.set(terminalTexts, { textContent: '' });
       gsap.set(terminalStatuses, { autoAlpha: 0 });
       gsap.set(commandLines, { autoAlpha: 0, y: 4 });
+      gsap.set(postLines, { autoAlpha: 0, y: 4 });
+      gsap.set(terminalProgress, { autoAlpha: 0, y: 4 });
+      gsap.set(terminalProgressFill, { scaleX: 0 });
+      if (terminalProgressValue) terminalProgressValue.textContent = '000%';
       gsap.set(introCursor, { opacity: 1 });
       gsap.set(root.querySelectorAll('.wordmark-letter'), { opacity: 0 });
       gsap.set(root.querySelector('.wordmark-cross'), { opacity: 0, scale: 0.6 });
@@ -173,7 +242,6 @@ export default function HeroSection() {
       gsap.set(root.querySelector('.reactive-ascii-background'), { opacity: 0 });
       gsap.set(root.querySelector('.crt-stage-shell'), { clipPath: 'inset(50% 0% 50% 0%)' });
       gsap.set(root.querySelector('.crt-power-line'), { opacity: 0, scaleX: 0 });
-      gsap.set(root.querySelector('.scroll-hint'), { opacity: 0 });
       const fallbackTimer = window.setTimeout(finalizeHero, (timing.end + 0.45) * 1000);
 
       type TypingProfile = {
@@ -225,8 +293,9 @@ export default function HeroSection() {
         return cursor;
       };
 
-      const commandTexts = ['load identity.sx', 'render interface'];
-      const commandStatusTexts = ['[OK]', '[OK]'];
+      const commandTexts = ['load identity.sx', 'compile pair', 'render hero --mono'];
+      const commandStatusTexts = ['[ OK ]', '[ RUN ]', '[ .. ]'];
+      const postTexts = ['identity compose', 'interface sync', 'next modules pending'];
       const profiles = mobile
         ? {
             boot: { base: 0.018, variance: 0.012, punctuation: 0.018, space: 0.01 },
@@ -239,14 +308,38 @@ export default function HeroSection() {
             commandMedium: { base: 0.032, variance: 0.019, punctuation: 0.04, space: 0.02 }
           };
       const commandProfiles = [profiles.commandMedium, profiles.commandFast];
+      const progressState = { value: 0 };
+      const progressDuration = Math.max(0.1, timing.progressEnd - timing.progress);
 
       tl.to(introTerminal, { autoAlpha: 1, y: 0, duration: 0.18 }, timing.terminal);
       typeText(introCommand, 'boot --mode ascii', timing.boot, profiles.boot);
+      tl.to(terminalProgress, { autoAlpha: 1, y: 0, duration: 0.18 }, timing.progress - 0.08)
+        .to(
+          terminalProgressFill,
+          { scaleX: 1, duration: progressDuration, ease: 'power1.inOut' },
+          timing.progress
+        )
+        .to(
+          progressState,
+          {
+            value: 100,
+            duration: progressDuration,
+            ease: 'power1.inOut',
+            onUpdate: () => {
+              if (!terminalProgressValue) return;
+              terminalProgressValue.textContent = `${Math.round(progressState.value).toString().padStart(3, '0')}%`;
+            },
+            onComplete: () => {
+              if (terminalProgressValue) terminalProgressValue.textContent = '100%';
+            }
+          },
+          timing.progress
+        );
 
       commandLines.forEach((line, index) => {
         const text = line.querySelector<HTMLElement>('.terminal-text');
         const status = line.querySelector<HTMLElement>('.terminal-status');
-        const lineStart = timing.commands + index * (mobile ? 0.32 : 0.46);
+        const lineStart = timing.commands + index * (mobile ? 0.42 : 0.58);
         const textEnd = typeText(text, commandTexts[index] ?? '', lineStart + 0.06, commandProfiles[index] ?? profiles.commandMedium);
 
         tl.to(line, { autoAlpha: 1, y: 0, duration: 0.12 }, lineStart);
@@ -259,77 +352,12 @@ export default function HeroSection() {
         ).to(status, { autoAlpha: 1, duration: 0.08 }, textEnd + (mobile ? 0.07 : 0.11));
       });
 
-      const buildWordmarkFlight = () => {
-        const source = root.querySelector<HTMLElement>('.wordmark-visual');
-        const target = document.querySelector<HTMLElement>('[data-brand-target], .top-ascii-bar__brand');
-        if (!source || !target) return null;
-
-        const sourceRect = source.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-        const sourceStyle = window.getComputedStyle(source);
-        const clone = document.createElement('div');
-
-        clone.className = 'wordmark-flight-clone';
-        clone.textContent = brand.name;
-        Object.assign(clone.style, {
-          position: 'fixed',
-          top: `${sourceRect.top}px`,
-          left: `${sourceRect.left}px`,
-          zIndex: '1000',
-          width: `${sourceRect.width}px`,
-          height: `${sourceRect.height}px`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: sourceStyle.color,
-          fontFamily: sourceStyle.fontFamily,
-          fontSize: sourceStyle.fontSize,
-          fontWeight: sourceStyle.fontWeight,
-          lineHeight: sourceStyle.lineHeight,
-          letterSpacing: sourceStyle.letterSpacing,
-          textTransform: sourceStyle.textTransform,
-          textShadow: sourceStyle.textShadow,
-          whiteSpace: 'nowrap',
-          pointerEvents: 'none',
-          transformOrigin: 'top left'
-        });
-
-        document.body.appendChild(clone);
-        gsap.set(target, { autoAlpha: 0 });
-
-        return {
-          clone,
-          target,
-          x: targetRect.left + targetRect.width / 2 - (sourceRect.left + sourceRect.width / 2),
-          y: targetRect.top + targetRect.height / 2 - (sourceRect.top + sourceRect.height / 2),
-          scale: Math.max(0.1, targetRect.width / Math.max(sourceRect.width, 1))
-        };
-      };
-
-      const playWordmarkFlight = (attempt = 0) => {
-        window.requestAnimationFrame(() => {
-          const flight = buildWordmarkFlight();
-          if (!flight) {
-            if (attempt < 8) playWordmarkFlight(attempt + 1);
-            return;
-          }
-
-          flightClone = flight.clone;
-          gsap.to(flight.clone, {
-            x: flight.x,
-            y: flight.y,
-          scale: flight.scale,
-            opacity: 0.92,
-            duration: mobile ? 0.42 : 0.68,
-            ease: 'expo.inOut',
-            onComplete: () => {
-              gsap.set(flight.target, { autoAlpha: 1, clearProps: 'opacity,visibility' });
-              flight.clone.remove();
-              if (flightClone === flight.clone) flightClone = null;
-            }
-          });
-        });
-      };
+      postLines.forEach((line, index) => {
+        const text = line.querySelector<HTMLElement>('.terminal-text');
+        const lineStart = timing.post + index * (mobile ? 0.18 : 0.24);
+        tl.to(line, { autoAlpha: 1, y: 0, duration: 0.12 }, lineStart);
+        typeText(text, postTexts[index] ?? '', lineStart + 0.04, profiles.commandFast);
+      });
 
       tl.to(root.querySelector('.crt-stage-shell'), { clipPath: 'inset(0% 0% 0% 0%)', duration: mobile ? 0.44 : 0.56, ease: 'expo.out' }, 0.18)
         .to(introTerminal, { autoAlpha: 0, y: mobile ? -6 : -10, duration: mobile ? 0.26 : 0.36 }, timing.cross - (mobile ? 0.32 : 0.48))
@@ -349,7 +377,8 @@ export default function HeroSection() {
           },
           timing.cross + 0.03
         )
-        .to(root.querySelectorAll('.burst-particle'), { opacity: 0, duration: 0.16 }, timing.cross + (mobile ? 0.34 : 0.45));
+        .to(root.querySelectorAll('.burst-particle'), { opacity: 0, duration: 0.16 }, timing.cross + (mobile ? 0.34 : 0.45))
+        .call(() => setShowWordmarkBurst(false), [], timing.cross + (mobile ? 0.58 : 0.68));
 
       const letterOrder = letters
         .map((letter, index) => ({ letter, index, distance: Math.abs(index - (letters.length - 1) / 2) }))
@@ -391,15 +420,14 @@ export default function HeroSection() {
         .to(introTerminal, { autoAlpha: 0, y: mobile ? -6 : -10, duration: 0.24 }, timing.layout - 0.08)
         .to(identity, { x: 0, y: 0, scale: 1, duration: mobile ? 0.42 : 0.74, ease: 'expo.out' }, timing.layout)
         .to(root.querySelector('.hero-eyebrow'), { opacity: 1, y: 0, duration: mobile ? 0.36 : 0.48 }, timing.layout + 0.08)
+        .call(() => setIsHeroTextActive(true), [], timing.layout + 0.14)
         .to(copy, { autoAlpha: 1, x: 0, y: 0, duration: mobile ? 0.44 : 0.58, ease: 'power3.out' }, timing.layout + 0.18)
         .to(root.querySelectorAll('.hero-copy .hero-entrance'), { opacity: 1, y: 0, stagger: mobile ? 0.09 : 0.12, duration: mobile ? 0.42 : 0.52 }, timing.layout + 0.22)
-        .to(root.querySelector('.scroll-hint'), { opacity: 1, duration: 0.32 }, timing.end - 0.24)
-        .call(() => root.classList.add('is-ready'), [], timing.flight)
-        .call(playWordmarkFlight, [], timing.flight + 0.02)
         .call(finalizeHero, [], timing.end);
 
       return () => {
         window.clearTimeout(fallbackTimer);
+        releaseInitialScroll?.();
         tl.kill();
       };
     },
@@ -426,19 +454,28 @@ export default function HeroSection() {
             <p className="hero-eyebrow hero-entrance">ASCII DIGITAL STUDIO</p>
             <div className="wordmark-stack">
               <AsciiWordmark />
-              <PixelBurstFromCross />
+              <PixelBurstFromCross active={showWordmarkBurst} />
             </div>
           </div>
           <div className="hero-copy">
-            <p className="hero-subtitle hero-entrance">Сайты, приложения и цифровой дизайн.</p>
-            <p className="hero-description hero-entrance">
-              Нас двое. Проектируем и собираем понятные цифровые продукты — от идеи до работающего интерфейса.
-            </p>
+            <TextType
+              aria-live="polite"
+              as="p"
+              className="hero-subtitle hero-entrance"
+              cursorCharacter="▎"
+              cursorClassName="hero-subtitle__cursor"
+              deletingSpeed={24}
+              disabled={reducedMotion || !isHeroTextActive}
+              hideCursorWhileTyping={false}
+              initialDelay={120}
+              pauseDuration={1450}
+              text={heroTypePhrases}
+              typingSpeed={42}
+              variableSpeed={{ min: 28, max: 72 }}
+              variableSpeedEnabled
+            />
             <div className="hero-actions hero-entrance">
               <PixelTransitionButton href="#about">Обсудить проект</PixelTransitionButton>
-              <PixelTransitionButton href="#works" variant="secondary">
-                Смотреть работы
-              </PixelTransitionButton>
             </div>
           </div>
         </div>
@@ -459,11 +496,33 @@ export default function HeroSection() {
             <span className="terminal-text" />
             <span className="terminal-status" />
           </p>
+          <p className="terminal-line terminal-line--command">
+            <span>&gt; </span>
+            <span className="terminal-text" />
+            <span className="terminal-status" />
+          </p>
+          <p className="terminal-progress-line">
+            <span>&gt; progress</span>
+            <span className="terminal-progress-track">
+              <span className="terminal-progress-fill" />
+            </span>
+            <span className="terminal-progress-value">000%</span>
+          </p>
+          <p className="terminal-line terminal-line--post">
+            <span>&gt; </span>
+            <span className="terminal-text" />
+          </p>
+          <p className="terminal-line terminal-line--post">
+            <span>&gt; </span>
+            <span className="terminal-text" />
+          </p>
+          <p className="terminal-line terminal-line--post">
+            <span>[ </span>
+            <span className="terminal-text" />
+            <span> ]</span>
+          </p>
         </div>
 
-        <button className="scroll-hint hero-entrance" type="button" onClick={scrollToAbout}>
-          [ scroll ]
-        </button>
       </CRTStage>
     </section>
   );

@@ -40,6 +40,10 @@ type TextTypeProps<T extends ElementType = 'div'> = {
   disabled?: boolean;
 } & Omit<ComponentPropsWithoutRef<T>, 'as' | 'children' | 'className'>;
 
+function splitTextUnits(value: string) {
+  return Array.from(value.matchAll(/\P{Mark}\p{Mark}*/gu), ([unit]) => unit);
+}
+
 export default function TextType<T extends ElementType = 'div'>({
   text,
   as,
@@ -184,7 +188,7 @@ export default function TextType<T extends ElementType = 'div'>({
 
     let timeout: number | undefined;
     const currentText = textArray[currentTextIndex] ?? '';
-    const processedText = reverseMode ? currentText.split('').reverse().join('') : currentText;
+    const processedChars = reverseMode ? splitTextUnits(currentText).reverse() : splitTextUnits(currentText);
 
     const executeTypingAnimation = () => {
       if (isDeleting) {
@@ -196,16 +200,16 @@ export default function TextType<T extends ElementType = 'div'>({
           setCurrentCharIndex(0);
         } else {
           timeout = window.setTimeout(() => {
-            setDisplayedText((previous) => previous.slice(0, -1));
+            setDisplayedText((previous) => splitTextUnits(previous).slice(0, -1).join(''));
           }, deletingSpeed);
         }
         return;
       }
 
-      if (currentCharIndex < processedText.length) {
+      if (currentCharIndex < processedChars.length) {
         timeout = window.setTimeout(
           () => {
-            setDisplayedText((previous) => previous + processedText[currentCharIndex]);
+            setDisplayedText((previous) => previous + processedChars[currentCharIndex]);
             setCurrentCharIndex((previous) => previous + 1);
           },
           effectiveVariableSpeed ? getRandomSpeed() : typingSpeed

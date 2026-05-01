@@ -2,7 +2,6 @@ import { useLayoutEffect } from 'react';
 import AboutSection from './components/about/AboutSection';
 import HeroSection from './components/hero/HeroSection';
 import { InteractionProvider } from './components/interaction/InteractionProvider';
-import TopAsciiBar from './components/navigation/TopAsciiBar';
 import WorksSection from './components/works/WorksSection';
 
 export default function App() {
@@ -22,7 +21,6 @@ export default function App() {
 
   return (
     <InteractionProvider>
-      <TopAsciiBar />
       <a className="skip-link" href="#about">
         Перейти к блоку о нас
       </a>
