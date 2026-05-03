@@ -22,9 +22,6 @@ export default function App() {
 
   return (
     <InteractionProvider>
-      <a className="skip-link" href="#about">
-        Перейти к блоку о нас
-      </a>
       <main id="main" className="app-main">
         <HeroSection />
         <AboutSection />

@@ -85,25 +85,6 @@ button:focus-visible {
   clip-path: inset(50%);
 }
 
-.skip-link {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 200;
-  transform: translateY(-150%);
-  border: 1px solid var(--white);
-  background: var(--white);
-  color: var(--black);
-  padding: 10px 12px;
-  font-size: 0.78rem;
-  text-decoration: none;
-  transition: transform 160ms ease;
-}
-
-.skip-link:focus {
-  transform: translateY(0);
-}
-
 .top-ascii-bar {
   position: fixed;
   top: 12px;
