@@ -2,7 +2,7 @@ export default function AboutCopy() {
   return (
     <div className="about-copy">
       <div className="about-copy__heading">
-        <p className="section-label works-label">[ О НАС ]</p>
+        <p className="section-label">[ О НАС ]</p>
         <h2>Два человека. Один цельный процесс.</h2>
       </div>
       <div className="about-copy__body">

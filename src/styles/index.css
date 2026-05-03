@@ -2644,6 +2644,227 @@ button:focus-visible {
   transform: translateY(-1px);
 }
 
+.contacts-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  min-height: clamp(620px, 86svh, 860px);
+  margin-top: clamp(-96px, -8vh, -56px);
+  padding: clamp(138px, 18vh, 196px) 0 clamp(92px, 12vh, 142px);
+  background:
+    linear-gradient(180deg, rgba(3, 3, 3, 0.96) 0%, rgba(3, 3, 3, 0.66) 16%, rgba(3, 3, 3, 0) 38%),
+    radial-gradient(circle at 70% 40%, rgba(125, 215, 255, 0.09), transparent 23rem),
+    radial-gradient(circle at 32% 70%, rgba(255, 255, 255, 0.06), transparent 28rem),
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    #030303;
+  background-size: auto, auto, auto, 46px 46px, 46px 46px, auto;
+  scroll-margin-top: 86px;
+}
+
+.contacts-section::before,
+.contacts-section::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.contacts-section::before {
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.026) 50%, transparent 50%),
+    radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.32) 72%, rgba(0, 0, 0, 0.92) 100%);
+  background-size: 100% 4px, auto;
+  opacity: 0.64;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.48) 16%, #000 30%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.48) 16%, #000 30%, #000 100%);
+}
+
+.contacts-section::after {
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 0;
+  height: clamp(180px, 24vh, 300px);
+  background: linear-gradient(180deg, rgba(3, 3, 3, 0.96), rgba(3, 3, 3, 0));
+}
+
+.contacts-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(1220px, calc(100vw - 64px));
+  grid-template-columns: minmax(300px, 0.76fr) minmax(440px, 1.24fr);
+  gap: clamp(32px, 5.2vw, 86px);
+  align-items: center;
+  margin: 0 auto;
+}
+
+.contacts-heading {
+  display: grid;
+  gap: 20px;
+  align-content: center;
+}
+
+.contacts-label {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+
+.contacts-heading h2 {
+  max-width: 6ch;
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(3.8rem, 8vw, 8.4rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: 0;
+}
+
+.contact-telegram-card {
+  --telegram-glow-x: 22%;
+  --telegram-glow-y: 50%;
+  position: relative;
+  display: grid;
+  min-height: clamp(360px, 32vw, 500px);
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 58px);
+  align-items: center;
+  overflow: hidden;
+  padding: clamp(28px, 4vw, 56px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.016) 1px, transparent 1px),
+    radial-gradient(ellipse 18rem 14rem at var(--telegram-glow-x) var(--telegram-glow-y), rgba(142, 231, 255, 0.16), rgba(142, 231, 255, 0.055) 34%, transparent 68%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.008) 48%, rgba(142, 231, 255, 0.018)),
+    rgba(1, 1, 1, 0.96);
+  background-size: 18px 18px, 18px 18px, auto, auto, auto;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 28px 82px rgba(0, 0, 0, 0.38);
+}
+
+.contact-telegram-card::before,
+.contact-telegram-card::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.contact-telegram-card::before {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.014) 50%, rgba(0, 0, 0, 0.18) 50%),
+    radial-gradient(ellipse 13rem 11rem at var(--telegram-glow-x) var(--telegram-glow-y), rgba(255, 255, 255, 0.105), transparent 72%);
+  background-size: 100% 4px, auto;
+  opacity: 0.58;
+}
+
+.contact-telegram-card::after {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: 0.5;
+  transform: translate(12px, 12px);
+}
+
+.telegram-metallic-mark {
+  position: relative;
+  display: grid;
+  width: clamp(148px, 15vw, 232px);
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  place-items: center;
+  isolation: isolate;
+}
+
+.telegram-metallic-logo {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: 50% 50%;
+  filter:
+    drop-shadow(0 0 18px rgba(255, 255, 255, 0.28))
+    drop-shadow(0 0 58px rgba(142, 231, 255, 0.34));
+  animation: telegramLogoFloat 6.8s ease-in-out infinite;
+}
+
+.telegram-metallic-logo__path {
+  transform-origin: 50% 50%;
+  animation: telegramLogoGlint 5.4s ease-in-out infinite;
+  transform-box: fill-box;
+}
+
+.contact-telegram-card__copy {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.contact-telegram-card__channel,
+.contact-telegram-card__placeholder {
+  margin: 0;
+}
+
+.contact-telegram-card__channel {
+  width: fit-content;
+  color: var(--text-muted);
+  font-size: clamp(0.88rem, 1.15vw, 1.08rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.contact-telegram-card__channel::before {
+  content: "[ ";
+}
+
+.contact-telegram-card__channel::after {
+  content: " ]";
+}
+
+.contact-telegram-card__placeholder {
+  max-width: 14ch;
+  color: var(--text);
+  font-size: clamp(1.9rem, 4.6vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+@keyframes telegramLogoFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+  50% {
+    transform: translate3d(0, -5px, 0) rotate(2deg);
+  }
+}
+
+@keyframes telegramLogoGlint {
+  0%,
+  100% {
+    filter: brightness(0.98) contrast(1.08) hue-rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    filter: brightness(1.26) contrast(1.18) hue-rotate(14deg);
+    transform: translate3d(0, -1px, 0) scale(1.012);
+  }
+}
+
 @media (max-width: 760px) {
   .works-section {
     padding: 78px 0 96px;
@@ -2692,6 +2913,47 @@ button:focus-visible {
   .work-project-card__button {
     min-width: 0;
     width: 100%;
+  }
+
+  .contacts-section {
+    min-height: auto;
+    margin-top: -58px;
+    padding: 98px 0 92px;
+    scroll-margin-top: 76px;
+  }
+
+  .contacts-grid {
+    width: min(100% - 28px, 540px);
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .contacts-heading h2 {
+    font-size: clamp(3.25rem, 20vw, 5.4rem);
+  }
+
+  .contact-telegram-card {
+    --telegram-glow-x: 50%;
+    --telegram-glow-y: 26%;
+    min-height: auto;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 24px;
+    padding: 28px 22px 32px;
+    text-align: center;
+  }
+
+  .telegram-metallic-mark {
+    width: clamp(142px, 45vw, 214px);
+  }
+
+  .contact-telegram-card__copy {
+    justify-items: center;
+  }
+
+  .contact-telegram-card__placeholder {
+    max-width: 12ch;
+    font-size: clamp(2rem, 10vw, 3.25rem);
   }
 }
 

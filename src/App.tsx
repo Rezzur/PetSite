@@ -1,5 +1,6 @@
 import { useLayoutEffect } from 'react';
 import AboutSection from './components/about/AboutSection';
+import ContactsSection from './components/contacts/ContactsSection';
 import HeroSection from './components/hero/HeroSection';
 import { InteractionProvider } from './components/interaction/InteractionProvider';
 import WorksSection from './components/works/WorksSection';
@@ -28,6 +29,7 @@ export default function App() {
         <HeroSection />
         <AboutSection />
         <WorksSection />
+        <ContactsSection />
       </main>
     </InteractionProvider>
   );

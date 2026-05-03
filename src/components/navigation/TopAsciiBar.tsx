@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { brand } from '../../data/brand';
 import { scrollToPageSection } from '../../utils/scroll';
 
-type ActiveZone = 'top' | 'about' | 'works';
+type ActiveZone = 'top' | 'about' | 'works' | 'contacts';
 
 const navItems: Array<{ id: ActiveZone; label: string; target?: string; disabled?: boolean }> = [
   { id: 'top', label: '00 / top', target: 'top' },
   { id: 'about', label: '01 / about', target: 'about' },
-  { id: 'works', label: '02 / works', target: 'works' }
+  { id: 'works', label: '02 / works', target: 'works' },
+  { id: 'contacts', label: '03 / contacts', target: 'contacts' }
 ];
 
 function prefersReducedMotion() {
@@ -44,7 +45,13 @@ export default function TopAsciiBar() {
       frame = 0;
       const about = document.getElementById('about');
       const works = document.getElementById('works');
+      const contacts = document.getElementById('contacts');
       const threshold = 140;
+
+      if (contacts && contacts.getBoundingClientRect().top <= threshold) {
+        setActiveZone('contacts');
+        return;
+      }
 
       if (works && works.getBoundingClientRect().top <= threshold) {
         setActiveZone('works');
@@ -66,7 +73,7 @@ export default function TopAsciiBar() {
 
     const updateFromRequestedSection = (event: Event) => {
       const id = (event as CustomEvent<{ id?: string }>).detail?.id;
-      if (id === 'top' || id === 'about' || id === 'works') {
+      if (id === 'top' || id === 'about' || id === 'works' || id === 'contacts') {
         setActiveZone(id);
       }
     };
@@ -150,7 +157,7 @@ export default function TopAsciiBar() {
           <span className="top-ascii-bar__status" aria-label="Статус онлайн">
             [ {isHeroReady ? 'ONLINE' : 'BOOT'} ]
           </span>
-          <button className="top-ascii-bar__cta" disabled={!isHeroReady} type="button" onClick={() => goTo('about')}>
+          <button className="top-ascii-bar__cta" disabled={!isHeroReady} type="button" onClick={() => goTo('contacts')}>
             [ Обсудить ]
           </button>
         </div>
@@ -184,7 +191,7 @@ export default function TopAsciiBar() {
           className="top-ascii-bar__mobile-item top-ascii-bar__mobile-item--cta"
           disabled={!isHeroReady}
           type="button"
-          onClick={() => goTo('about')}
+          onClick={() => goTo('contacts')}
         >
           [ Обсудить ]
         </button>

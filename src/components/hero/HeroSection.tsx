@@ -13,11 +13,11 @@ import TextType from './TextType';
 gsap.registerPlugin(useGSAP);
 
 const heroTypePhrases = [
-  'Мы создаем сайты.🌐',
-  'Мы делаем приложения.📱',
-  'Мы проектируем интерфейсы.🖥️',
-  'Мы создаем цифровой дизайн.✨',
-  'Мы собираем понятные продукты.🚀'
+  'Мы создаем сайты. 🌐',
+  'Мы делаем приложения. 📱',
+  'Мы проектируем интерфейсы. 🖥️',
+  'Мы создаем цифровой дизайн. ✨',
+  'Мы собираем понятные продукты. 🚀'
 ];
 
 const scrollLockKeys = new Set([' ', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp']);
@@ -475,7 +475,7 @@ export default function HeroSection() {
               variableSpeedEnabled
             />
             <div className="hero-actions hero-entrance">
-              <PixelTransitionButton href="#about">Обсудить проект</PixelTransitionButton>
+              <PixelTransitionButton href="#contacts">Обсудить проект</PixelTransitionButton>
             </div>
           </div>
         </div>
