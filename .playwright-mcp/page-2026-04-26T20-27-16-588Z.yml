@@ -1,0 +1,97 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - button "SMIRNOV × ZYRYANOV" [ref=e6] [cursor=pointer]
+      - navigation "Основная навигация" [ref=e7]:
+        - button "[ 00 / top ]" [disabled] [ref=e8]
+        - button "[ 01 / about ]" [disabled] [ref=e9]
+        - button "[ 02 / works ]" [disabled] [ref=e10]
+      - generic [ref=e11]:
+        - generic "Статус онлайн" [ref=e12]: "[ BOOT ]"
+        - button "[ Обсудить ]" [disabled] [ref=e13] [cursor=pointer]
+  - link "Перейти к блоку о нас" [ref=e14] [cursor=pointer]:
+    - /url: "#about"
+  - main [ref=e15]:
+    - generic [ref=e18]:
+      - generic:
+        - generic:
+          - generic: ┌──┐
+          - generic: │[]│
+          - generic: └──┘
+          - generic: ╱╲
+          - generic: ╲╱
+        - generic:
+          - generic: ┌──┐
+          - generic: │[]│
+          - generic: └──┘
+          - generic: ╱╲
+          - generic: ╲╱
+    - generic [ref=e21]:
+      - generic [ref=e23]:
+        - paragraph [ref=e24]: "[ О НАС ]"
+        - heading "Два человека. Один цельный процесс." [level=2] [ref=e25]
+        - paragraph [ref=e26]: Мы — небольшая команда из двух человек. Соединяем разработку, интерфейсы и визуальную систему, чтобы быстро превращать идеи в понятные цифровые продукты.
+        - generic "Рабочая система команды" [ref=e27]:
+          - generic [ref=e28]: 01 / идея становится структурой _
+          - generic [ref=e29]: 02 / структура становится интерфейсом _
+          - generic [ref=e30]: 03 / интерфейс становится продуктом _
+      - generic "Карточки участников команды" [ref=e32]:
+        - article "SERGEY SMIRNOV" [ref=e33]:
+          - generic [ref=e34]: "[ loading lanyard badge ]"
+          - generic [ref=e36]:
+            - heading "SERGEY SMIRNOV" [level=3] [ref=e37]
+            - paragraph [ref=e38]: Разработка · Архитектура · Логика
+        - article "YAN ZYRYANOV" [ref=e39]:
+          - generic [ref=e40]: "[ loading lanyard badge ]"
+          - generic [ref=e42]:
+            - heading "YAN ZYRYANOV" [level=3] [ref=e43]
+            - paragraph [ref=e44]: Интерфейсы · Дизайн · Визуал
+    - region "ASCII works" [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - paragraph [ref=e48]: "[ 02 / works ]"
+          - heading "ASCII works" [level=2] [ref=e49]
+          - paragraph [ref=e50]: Три направления, где SMIRNOV × ZYRYANOV соединяют инженерную сборку, интерфейс и визуальную систему.
+        - generic [ref=e51]:
+          - article [ref=e52]:
+            - generic [ref=e54]:
+              - generic [ref=e55]: "01"
+              - generic [ref=e56]: ┌────────────┐
+              - generic [ref=e57]: │ UI / FLOW │
+              - generic [ref=e58]: │ 01 → 02 → │
+              - generic [ref=e59]: └────────────┘
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - generic [ref=e62]: "ID: 01"
+                - generic [ref=e63]: ONLINE
+              - heading "Interface systems" [level=3] [ref=e64]
+              - paragraph [ref=e65]: "ROLE: WEB / PRODUCT"
+              - paragraph [ref=e66]: Проектируем понятные интерфейсы, где визуальный язык и фронтенд работают как одна система.
+          - article [ref=e68]:
+            - generic [ref=e70]:
+              - generic [ref=e71]: "02"
+              - generic [ref=e72]: ╭────────────╮
+              - generic [ref=e73]: │ SM × ZY │
+              - generic [ref=e74]: "│ SIGNAL: OK │"
+              - generic [ref=e75]: ╰────────────╯
+            - generic [ref=e76]:
+              - generic [ref=e77]:
+                - generic [ref=e78]: "ID: 02"
+                - generic [ref=e79]: ONLINE
+              - heading "Brand motion" [level=3] [ref=e80]
+              - paragraph [ref=e81]: "ROLE: IDENTITY / MOTION"
+              - paragraph [ref=e82]: Собираем брендовые экраны, микроанимации и ASCII-детали без разрыва между дизайном и кодом.
+          - article [ref=e84]:
+            - generic [ref=e86]:
+              - generic [ref=e87]: "03"
+              - generic [ref=e88]: "[ build ]"
+              - generic [ref=e89]: "[ test ]"
+              - generic [ref=e90]: "[ ship ]"
+              - generic [ref=e91]: "[ live ]"
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e94]: "ID: 03"
+                - generic [ref=e95]: ONLINE
+              - heading "Launch builds" [level=3] [ref=e96]
+              - paragraph [ref=e97]: "ROLE: DEV / DELIVERY"
+              - paragraph [ref=e98]: Доводим посадочные страницы и продуктовые модули до состояния, которое можно показывать людям.

@@ -1,0 +1,111 @@
+- generic [ref=e3]:
+  - link "Перейти к блоку о нас" [ref=e4] [cursor=pointer]:
+    - /url: "#about"
+  - main [ref=e5]:
+    - generic [ref=e8]:
+      - generic:
+        - generic:
+          - generic: ┌──┐
+          - generic: │[]│
+          - generic: └──┘
+          - generic: ╱╲
+          - generic: ╲╱
+        - generic:
+          - generic: ┌──┐
+          - generic: │[]│
+          - generic: └──┘
+          - generic: ╱╲
+          - generic: ╲╱
+      - generic [ref=e9]:
+        - paragraph [ref=e10]: ASCII DIGITAL STUDIO / TWO-PERSON SYSTEM
+        - generic [ref=e11]:
+          - heading "SMIRNOV × ZRYANOV" [level=1] [ref=e12]:
+            - generic [ref=e13]: SMIRNOV × ZRYANOV
+            - generic [ref=e14]:
+              - generic [ref=e15]:
+                - generic [ref=e16]: S
+                - generic [ref=e17]: M
+                - generic [ref=e18]: I
+                - generic [ref=e19]: R
+                - generic [ref=e20]: "N"
+                - generic [ref=e21]: O
+                - generic [ref=e22]: V
+              - generic [ref=e23]: ×
+              - generic [ref=e24]:
+                - generic [ref=e25]: Z
+                - generic [ref=e26]: R
+                - generic [ref=e27]: "Y"
+                - generic [ref=e28]: A
+                - generic [ref=e29]: "N"
+                - generic [ref=e30]: O
+                - generic [ref=e31]: V
+          - generic:
+            - generic: .
+            - generic: ":"
+            - generic: "*"
+            - generic: ;
+            - generic: "-"
+            - generic: ":"
+            - generic: _
+            - generic: ":"
+            - generic: +
+            - generic: "{"
+            - generic: /
+            - generic: ":"
+            - generic: "["
+            - generic: .
+            - generic: \
+            - generic: _
+            - generic: "{"
+            - generic: ;
+            - generic: "]"
+            - generic: x
+            - generic: ":"
+            - generic: "{"
+        - generic "Системный запуск" [ref=e32]:
+          - paragraph [ref=e33]: "> SYSTEM BOOT"
+          - paragraph [ref=e34]:
+            - generic [ref=e35]: "> initializing ascii layer"
+            - generic [ref=e36]: "[ OK ]"
+          - paragraph [ref=e37]:
+            - generic [ref=e38]: "> loading identity"
+            - generic [ref=e39]: "[ .. ]"
+          - paragraph [ref=e40]:
+            - generic [ref=e41]: "> compiling interface"
+            - generic [ref=e42]: "[ .. ]"
+          - paragraph [ref=e43]:
+            - generic [ref=e44]: "> stabilizing signal"
+            - generic [ref=e45]: "[ .. ]"
+        - paragraph [ref=e48]:
+          - generic [ref=e49]: _
+        - paragraph [ref=e50]:
+          - generic [ref=e51]: _
+        - generic [ref=e52]:
+          - link "Обсудить проект" [ref=e55] [cursor=pointer]:
+            - /url: "#about"
+            - generic [ref=e58]: Обсудить проект
+          - link "Смотреть работы" [ref=e61] [cursor=pointer]:
+            - /url: "#about"
+            - generic [ref=e64]: Смотреть работы
+      - button "[ scroll ]" [ref=e65] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e69]:
+        - paragraph [ref=e70]: "[ О НАС ]"
+        - heading "Два человека. Один цельный процесс." [level=2] [ref=e71]
+        - paragraph [ref=e72]: Мы — небольшая команда из двух человек. Соединяем разработку, интерфейсы и визуальную систему, чтобы быстро превращать идеи в понятные цифровые продукты.
+        - generic "Рабочая система команды" [ref=e73]:
+          - generic [ref=e74]: 01 / идея становится структурой _
+          - generic [ref=e75]: 02 / структура становится интерфейсом _
+          - generic [ref=e76]: 03 / интерфейс становится продуктом _
+      - generic "Карточки участников команды" [ref=e78]:
+        - article [ref=e79]:
+          - generic [ref=e80]: "[ loading lanyard badges ]"
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - heading "SERGEY SMIRNOV" [level=3] [ref=e83]
+              - paragraph [ref=e84]: Разработка · Архитектура · Логика
+            - generic [ref=e85]:
+              - heading "YAN ZRYANOV" [level=3] [ref=e86]
+              - paragraph [ref=e87]: Интерфейсы · Дизайн · Визуал
+    - region "Следующие модули" [ref=e88]:
+      - generic [ref=e89]: "[ next modules pending ]"
