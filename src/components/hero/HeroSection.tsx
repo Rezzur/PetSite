@@ -154,6 +154,8 @@ export default function HeroSection() {
       const terminalProgressFill = root.querySelector<HTMLElement>('.terminal-progress-fill');
       const terminalProgressValue = root.querySelector<HTMLElement>('.terminal-progress-value');
       let releaseInitialScroll: (() => void) | undefined;
+      let fallbackTimer: number | undefined;
+      let finalized = false;
 
       const getIntroTransform = () => {
         if (!identity || mobile) return { x: 0, y: 0, scale: 1 };
@@ -176,6 +178,10 @@ export default function HeroSection() {
       };
 
       const finalizeHero = () => {
+        if (finalized) return;
+
+        finalized = true;
+        if (fallbackTimer !== undefined) window.clearTimeout(fallbackTimer);
         releaseInitialScroll?.();
         releaseInitialScroll = undefined;
         root.classList.remove('is-intro');
@@ -191,7 +197,8 @@ export default function HeroSection() {
         gsap.set(introTerminal, { autoAlpha: 0 });
         gsap.set(root.querySelectorAll('.hero-entrance'), { opacity: 1, y: 0, x: 0 });
         gsap.set(root.querySelectorAll('.wordmark-letter, .wordmark-cross'), { opacity: 1, scale: 1, x: 0, y: 0 });
-        gsap.set(root.querySelectorAll('.burst-particle'), { opacity: 0, x: 0, y: 0, scale: 1 });
+        const burstParticles = gsap.utils.toArray<HTMLElement>('.burst-particle', root);
+        if (burstParticles.length > 0) gsap.set(burstParticles, { opacity: 0, x: 0, y: 0, scale: 1 });
         gsap.set(root.querySelector('.pixel-burst'), { autoAlpha: 0 });
         gsap.set(root.querySelector('.reactive-ascii-background'), { opacity: 0.52 });
         gsap.set(root.querySelector('.shape-grid-background'), { opacity: 0.34 });
@@ -242,7 +249,7 @@ export default function HeroSection() {
       gsap.set(root.querySelector('.reactive-ascii-background'), { opacity: 0 });
       gsap.set(root.querySelector('.crt-stage-shell'), { clipPath: 'inset(50% 0% 50% 0%)' });
       gsap.set(root.querySelector('.crt-power-line'), { opacity: 0, scaleX: 0 });
-      const fallbackTimer = window.setTimeout(finalizeHero, (timing.end + 0.45) * 1000);
+      fallbackTimer = window.setTimeout(finalizeHero, (timing.end + 0.45) * 1000);
 
       type TypingProfile = {
         base: number;
@@ -362,9 +369,12 @@ export default function HeroSection() {
       tl.to(root.querySelector('.crt-stage-shell'), { clipPath: 'inset(0% 0% 0% 0%)', duration: mobile ? 0.44 : 0.56, ease: 'expo.out' }, 0.18)
         .to(introTerminal, { autoAlpha: 0, y: mobile ? -6 : -10, duration: mobile ? 0.26 : 0.36 }, timing.cross - (mobile ? 0.32 : 0.48))
         .to(identity, { autoAlpha: 1, duration: 0.08 }, timing.cross - 0.04)
-        .to(root.querySelector('.wordmark-cross'), { opacity: 1, scale: 1, duration: mobile ? 0.28 : 0.36, ease: 'back.out(1.45)' }, timing.cross)
-        .fromTo(
-          root.querySelectorAll('.burst-particle'),
+        .to(root.querySelector('.wordmark-cross'), { opacity: 1, scale: 1, duration: mobile ? 0.28 : 0.36, ease: 'back.out(1.45)' }, timing.cross);
+
+      const introBurstParticles = gsap.utils.toArray<HTMLElement>('.burst-particle', root);
+      if (introBurstParticles.length > 0) {
+        tl.fromTo(
+          introBurstParticles,
           { opacity: 0, x: 0, y: 0, scale: 0.5 },
           {
             opacity: 1,
@@ -377,8 +387,10 @@ export default function HeroSection() {
           },
           timing.cross + 0.03
         )
-        .to(root.querySelectorAll('.burst-particle'), { opacity: 0, duration: 0.16 }, timing.cross + (mobile ? 0.34 : 0.45))
-        .call(() => setShowWordmarkBurst(false), [], timing.cross + (mobile ? 0.58 : 0.68));
+          .to(introBurstParticles, { opacity: 0, duration: 0.16 }, timing.cross + (mobile ? 0.34 : 0.45));
+      }
+
+      tl.call(() => setShowWordmarkBurst(false), [], timing.cross + (mobile ? 0.58 : 0.68));
 
       const letterOrder = letters
         .map((letter, index) => ({ letter, index, distance: Math.abs(index - (letters.length - 1) / 2) }))
@@ -426,7 +438,7 @@ export default function HeroSection() {
         .call(finalizeHero, [], timing.end);
 
       return () => {
-        window.clearTimeout(fallbackTimer);
+        if (fallbackTimer !== undefined) window.clearTimeout(fallbackTimer);
         releaseInitialScroll?.();
         tl.kill();
       };

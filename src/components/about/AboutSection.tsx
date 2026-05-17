@@ -2,6 +2,12 @@ import { badgeIdentities } from '../../data/content';
 import sergeyProfilePhoto from '../../assets/team/sergey-smirnov.png';
 import yanProfilePhoto from '../../assets/team/yan-zryanov.png';
 
+type DeveloperId = 'yan' | 'sergey';
+
+type AboutSectionProps = {
+  onNavigateDeveloper?: (developerId: DeveloperId) => void;
+};
+
 const initialsById: Record<string, string> = {
   sergey: 'SS',
   yan: 'YZ'
@@ -12,13 +18,15 @@ const profilePhotosById: Partial<Record<string, string>> = {
   yan: yanProfilePhoto
 };
 
-export default function AboutSection() {
+export default function AboutSection({ onNavigateDeveloper }: AboutSectionProps) {
   return (
-    <section className="about-section about-section--profiles" id="about">
+    <section className="about-section about-section--profiles" id="developers">
       <div className="about-profiles">
         <div className="about-profile-stack" aria-label="Профили команды">
           {badgeIdentities.map((profile) => {
             const profilePhoto = profilePhotosById[profile.id];
+            const developerId: DeveloperId = profile.id === 'yan' ? 'yan' : 'sergey';
+            const profileHref = `/developers/${developerId}`;
 
             return (
               <article
@@ -45,6 +53,17 @@ export default function AboutSection() {
                   <h3>{profile.name}</h3>
                   <p className="about-profile-card__role">{profile.role}</p>
                   <p className="about-profile-card__description">{profile.description}</p>
+                  <a
+                    className="about-profile-card__button"
+                    href={profileHref}
+                    onClick={(event) => {
+                      if (!onNavigateDeveloper) return;
+                      event.preventDefault();
+                      onNavigateDeveloper(developerId);
+                    }}
+                  >
+                    О Разработчике
+                  </a>
                 </div>
               </article>
             );
@@ -52,7 +71,7 @@ export default function AboutSection() {
         </div>
 
         <div className="about-profile-copy">
-          <p className="section-label">[ О НАС ]</p>
+          <p className="section-label">[ РАЗРАБОТЧИКИ ]</p>
           <h2>Два человека. Один цельный процесс.</h2>
           <p>
             Соединяем разработку, интерфейсы и визуальную систему, чтобы быстро превращать идеи в понятные цифровые
