@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useEffect, useRef, useState, type FocusEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { brand } from '../../data/brand';
 
 type ActiveZone = 'top' | 'developers' | 'works' | 'contacts';
@@ -23,6 +23,8 @@ const developerItems: Array<{ id: DeveloperId; label: string }> = [
   { id: 'yan', label: 'Ян' },
   { id: 'sergey', label: 'Сергей' }
 ];
+
+const developerDropdownGap = 8;
 
 function BracketedLabel({ label }: { label: string }) {
   return (
@@ -48,9 +50,55 @@ export default function TopAsciiBar({
   const [activeZone, setActiveZone] = useState<ActiveZone>(page === 'developer' ? 'developers' : 'top');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDevelopersMenuOpen, setIsDevelopersMenuOpen] = useState(false);
+  const [developersMenuBounds, setDevelopersMenuBounds] = useState<{ left: number; top: number; width: number } | null>(
+    null
+  );
   const [flashKey, setFlashKey] = useState<string | null>(null);
+  const developersButtonRef = useRef<HTMLButtonElement | null>(null);
+  const developersCloseTimerRef = useRef<number | undefined>(undefined);
   const flashTimerRef = useRef<number | undefined>(undefined);
   const isReady = page === 'developer' || isHeroReady;
+
+  const updateDevelopersMenuBounds = () => {
+    const button = developersButtonRef.current;
+    const rect = button?.getBoundingClientRect();
+    const barRect = button?.closest('.top-ascii-bar')?.getBoundingClientRect();
+    if (!rect || !barRect) return false;
+
+    const nextBounds = {
+      left: rect.left - barRect.left,
+      top: rect.bottom - barRect.top + developerDropdownGap,
+      width: rect.width
+    };
+
+    setDevelopersMenuBounds((previousBounds) => {
+      if (
+        previousBounds &&
+        Math.abs(previousBounds.left - nextBounds.left) < 0.5 &&
+        Math.abs(previousBounds.top - nextBounds.top) < 0.5 &&
+        Math.abs(previousBounds.width - nextBounds.width) < 0.5
+      ) {
+        return previousBounds;
+      }
+
+      return nextBounds;
+    });
+
+    return true;
+  };
+
+  useLayoutEffect(() => {
+    if (!isReady) return undefined;
+
+    updateDevelopersMenuBounds();
+    const frame = window.requestAnimationFrame(updateDevelopersMenuBounds);
+    window.addEventListener('resize', updateDevelopersMenuBounds);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('resize', updateDevelopersMenuBounds);
+    };
+  }, [isReady, page]);
 
   useEffect(() => {
     if (page === 'developer') {
@@ -89,8 +137,15 @@ export default function TopAsciiBar({
       const works = document.getElementById('works');
       const contacts = document.getElementById('contacts');
       const threshold = 140;
+      const contactsThreshold = Math.min(window.innerHeight * 0.62, 520);
+      const pageBottomGap = document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
 
-      if (contacts && contacts.getBoundingClientRect().top <= threshold) {
+      if (contacts && pageBottomGap <= 8) {
+        setActiveZone('contacts');
+        return;
+      }
+
+      if (contacts && contacts.getBoundingClientRect().top <= contactsThreshold) {
         setActiveZone('contacts');
         return;
       }
@@ -157,13 +212,45 @@ export default function TopAsciiBar({
   useEffect(() => {
     return () => {
       if (flashTimerRef.current !== undefined) window.clearTimeout(flashTimerRef.current);
+      if (developersCloseTimerRef.current !== undefined) window.clearTimeout(developersCloseTimerRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isDevelopersMenuOpen) return undefined;
+
+    let frame = 0;
+
+    const trackDevelopersMenuBounds = () => {
+      updateDevelopersMenuBounds();
+      frame = window.requestAnimationFrame(trackDevelopersMenuBounds);
+    };
+
+    trackDevelopersMenuBounds();
+    window.addEventListener('resize', updateDevelopersMenuBounds);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener('resize', updateDevelopersMenuBounds);
+    };
+  }, [isDevelopersMenuOpen]);
 
   const triggerFlash = (key: string) => {
     if (flashTimerRef.current !== undefined) window.clearTimeout(flashTimerRef.current);
     setFlashKey(key);
     flashTimerRef.current = window.setTimeout(() => setFlashKey(null), 430);
+  };
+
+  const openDevelopersMenu = () => {
+    if (developersCloseTimerRef.current !== undefined) window.clearTimeout(developersCloseTimerRef.current);
+    if (updateDevelopersMenuBounds()) {
+      setIsDevelopersMenuOpen(true);
+    }
+  };
+
+  const scheduleDevelopersMenuClose = () => {
+    if (developersCloseTimerRef.current !== undefined) window.clearTimeout(developersCloseTimerRef.current);
+    developersCloseTimerRef.current = window.setTimeout(() => setIsDevelopersMenuOpen(false), 120);
   };
 
   const goTo = (target: ActiveZone) => {
@@ -173,17 +260,18 @@ export default function TopAsciiBar({
     onNavigateHomeSection(target);
   };
 
+  const goBrandHome = () => {
+    setIsMenuOpen(false);
+    setIsDevelopersMenuOpen(false);
+    triggerFlash('brand-home');
+    onNavigateHomeSection('top');
+  };
+
   const goDeveloper = (nextDeveloperId: DeveloperId) => {
     setIsMenuOpen(false);
     setIsDevelopersMenuOpen(false);
     triggerFlash(`developer-${nextDeveloperId}`);
     onNavigateDeveloper(nextDeveloperId);
-  };
-
-  const closeDevelopersMenuOnBlur = (event: FocusEvent<HTMLDivElement>) => {
-    const nextFocusedElement = event.relatedTarget;
-    if (nextFocusedElement instanceof Node && event.currentTarget.contains(nextFocusedElement)) return;
-    setIsDevelopersMenuOpen(false);
   };
 
   return (
@@ -195,12 +283,12 @@ export default function TopAsciiBar({
     >
       <div className="top-ascii-bar__inner">
         <button
-          className={`top-ascii-bar__brand ${flashKey === 'section-top' ? 'is-flashing' : ''}`.trim()}
+          className={`top-ascii-bar__brand ${flashKey === 'brand-home' ? 'is-flashing' : ''}`.trim()}
           data-brand-target
           disabled={!isReady}
           tabIndex={isReady ? undefined : -1}
           type="button"
-          onClick={() => goTo('top')}
+          onClick={goBrandHome}
         >
           {brand.name}
         </button>
@@ -216,6 +304,7 @@ export default function TopAsciiBar({
                 <button
                   aria-current={activeZone === item.id ? 'page' : undefined}
                   className={className}
+                  data-nav-id={item.id}
                   disabled={!isReady}
                   key={item.id}
                   type="button"
@@ -230,17 +319,19 @@ export default function TopAsciiBar({
               <div
                 className="top-ascii-bar__nav-group"
                 key={item.id}
-                onBlur={closeDevelopersMenuOnBlur}
-                onFocus={() => setIsDevelopersMenuOpen(true)}
-                onMouseEnter={() => setIsDevelopersMenuOpen(true)}
-                onMouseLeave={() => setIsDevelopersMenuOpen(false)}
+                onBlur={scheduleDevelopersMenuClose}
+                onFocus={openDevelopersMenu}
+                onMouseEnter={openDevelopersMenu}
+                onMouseLeave={scheduleDevelopersMenuClose}
               >
                 <button
                   aria-current={activeZone === item.id ? 'page' : undefined}
                   aria-expanded={isDevelopersMenuOpen}
                   aria-haspopup="menu"
                   className={`${className} top-ascii-bar__pill--with-menu`}
+                  data-nav-id={item.id}
                   disabled={!isReady}
+                  ref={developersButtonRef}
                   type="button"
                   onClick={() => goTo(item.id)}
                 >
@@ -250,46 +341,11 @@ export default function TopAsciiBar({
                   </span>
                 </button>
 
-                <div
-                  aria-hidden={!isDevelopersMenuOpen}
-                  className="top-ascii-bar__dropdown"
-                  data-open={isDevelopersMenuOpen ? 'true' : 'false'}
-                  role="menu"
-                >
-                  {developerItems.map((developer) => (
-                    <button
-                      aria-current={developerId === developer.id ? 'page' : undefined}
-                      className={`top-ascii-bar__dropdown-item ${
-                        flashKey === `developer-${developer.id}` ? 'is-flashing' : ''
-                      }`.trim()}
-                      disabled={!isReady}
-                      key={developer.id}
-                      role="menuitem"
-                      type="button"
-                      onClick={() => goDeveloper(developer.id)}
-                    >
-                      <BracketedLabel label={developer.label} />
-                    </button>
-                  ))}
-                </div>
+                <span className="top-ascii-bar__dropdown-bridge" aria-hidden="true" />
               </div>
             );
           })}
         </nav>
-
-        <div className="top-ascii-bar__actions" aria-disabled={!isReady} data-nav-chrome>
-          <span className="top-ascii-bar__status" aria-label="Статус онлайн">
-            [ {isReady ? 'ONLINE' : 'BOOT'} ]
-          </span>
-          <button
-            className={`top-ascii-bar__cta ${flashKey === 'section-contacts' ? 'is-flashing' : ''}`.trim()}
-            disabled={!isReady}
-            type="button"
-            onClick={() => goTo('contacts')}
-          >
-            <BracketedLabel label="Обсудить" />
-          </button>
-        </div>
 
         <button
           aria-controls="top-ascii-menu"
@@ -341,16 +397,42 @@ export default function TopAsciiBar({
             ) : null}
           </div>
         ))}
-        <button
-          className={`top-ascii-bar__mobile-item top-ascii-bar__mobile-item--cta ${
-            flashKey === 'section-contacts' ? 'is-flashing' : ''
-          }`.trim()}
-          disabled={!isReady}
-          type="button"
-          onClick={() => goTo('contacts')}
-        >
-          <BracketedLabel label="Обсудить" />
-        </button>
+      </div>
+
+      <div
+        aria-hidden={!isDevelopersMenuOpen}
+        className="top-ascii-bar__dropdown"
+        data-open={isDevelopersMenuOpen ? 'true' : 'false'}
+        role="menu"
+        style={
+          developersMenuBounds
+            ? {
+                width: `${developersMenuBounds.width}px`,
+                left: `${developersMenuBounds.left}px`,
+                top: `${developersMenuBounds.top}px`
+              }
+            : undefined
+        }
+        onBlur={scheduleDevelopersMenuClose}
+        onFocus={openDevelopersMenu}
+        onMouseEnter={openDevelopersMenu}
+        onMouseLeave={scheduleDevelopersMenuClose}
+      >
+        {developerItems.map((developer) => (
+          <button
+            aria-current={developerId === developer.id ? 'page' : undefined}
+            className={`top-ascii-bar__dropdown-item ${
+              flashKey === `developer-${developer.id}` ? 'is-flashing' : ''
+            }`.trim()}
+            disabled={!isReady}
+            key={developer.id}
+            role="menuitem"
+            type="button"
+            onClick={() => goDeveloper(developer.id)}
+          >
+            <BracketedLabel label={developer.label} />
+          </button>
+        ))}
       </div>
     </header>
   );

@@ -31,6 +31,8 @@ type TextTypeProps<T extends ElementType = 'div'> = {
   cursorCharacter?: ReactNode;
   cursorClassName?: string;
   cursorBlinkDuration?: number;
+  textSuffixes?: ReactNode[];
+  suffixClassName?: string;
   textColors?: string[];
   variableSpeed?: VariableSpeed;
   variableSpeedEnabled?: boolean;
@@ -58,6 +60,8 @@ export default function TextType<T extends ElementType = 'div'>({
   cursorCharacter = '|',
   cursorClassName = '',
   cursorBlinkDuration = 0.5,
+  textSuffixes = [],
+  suffixClassName = '',
   textColors = [],
   variableSpeed,
   variableSpeedEnabled = false,
@@ -80,6 +84,10 @@ export default function TextType<T extends ElementType = 'div'>({
   const textArray = useMemo(() => (Array.isArray(text) ? text : [text]), [text]);
   const effectiveVariableSpeed = variableSpeedEnabled ? (variableSpeed ?? { min: 35, max: 88 }) : variableSpeed;
   const staticText = textArray[0] ?? '';
+  const visibleText = disabled ? staticText : displayedText;
+  const currentFullText = textArray[currentTextIndex] ?? '';
+  const currentSuffix = textSuffixes[currentTextIndex % textSuffixes.length];
+  const shouldShowSuffix = Boolean(currentSuffix) && visibleText.length >= currentFullText.length && !isDeleting;
 
   const getRandomSpeed = useCallback(() => {
     if (!effectiveVariableSpeed) return typingSpeed;
@@ -269,15 +277,19 @@ export default function TextType<T extends ElementType = 'div'>({
       ...props
     },
     <span className="text-type__content" style={{ color: getCurrentTextColor() }}>
-      {disabled ? staticText : displayedText}
+      {visibleText}
     </span>,
-    showCursor && (
-      <span
-        aria-hidden="true"
-        className={`text-type__cursor ${cursorClassName} ${shouldHideCursor ? 'text-type__cursor--hidden' : ''}`.trim()}
-        ref={cursorRef}
-      >
-        {cursorCharacter}
+    (shouldShowSuffix || showCursor) && (
+      <span className="text-type__tail" aria-hidden="true">
+        {shouldShowSuffix && <span className={`text-type__suffix ${suffixClassName}`.trim()}>{currentSuffix}</span>}
+        {showCursor && (
+          <span
+            className={`text-type__cursor ${cursorClassName} ${shouldHideCursor ? 'text-type__cursor--hidden' : ''}`.trim()}
+            ref={cursorRef}
+          >
+            {cursorCharacter}
+          </span>
+        )}
       </span>
     )
   );

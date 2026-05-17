@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { Globe2, Monitor, Rocket, Smartphone, Sparkles } from 'lucide-react';
 import { usePointer } from '../../hooks/usePointer';
 import AsciiWordmark from './AsciiWordmark';
 import CRTStage from './CRTStage';
@@ -13,14 +14,27 @@ import TextType from './TextType';
 gsap.registerPlugin(useGSAP);
 
 const heroTypePhrases = [
-  'Мы создаем сайты. 🌐',
-  'Мы делаем приложения. 📱',
-  'Мы проектируем интерфейсы. 🖥️',
-  'Мы создаем цифровой дизайн. ✨',
-  'Мы собираем понятные продукты. 🚀'
+  'Мы создаем сайты.',
+  'Мы делаем приложения.',
+  'Мы проектируем интерфейсы.',
+  'Мы создаем цифровой дизайн.',
+  'Мы собираем понятные продукты.'
+];
+
+const heroTypeIcons = [
+  <Globe2 key="sites" />,
+  <Smartphone key="apps" />,
+  <Monitor key="interfaces" />,
+  <Sparkles key="design" />,
+  <Rocket key="products" />
 ];
 
 const scrollLockKeys = new Set([' ', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp']);
+
+type HeroSectionProps = {
+  skipIntro?: boolean;
+  onIntroComplete?: () => void;
+};
 
 function lockInitialScroll() {
   const html = document.documentElement;
@@ -68,10 +82,10 @@ function lockInitialScroll() {
   };
 }
 
-export default function HeroSection() {
+export default function HeroSection({ skipIntro = false, onIntroComplete }: HeroSectionProps) {
   const rootRef = useRef<HTMLElement | null>(null);
-  const [isHeroTextActive, setIsHeroTextActive] = useState(false);
-  const [showWordmarkBurst, setShowWordmarkBurst] = useState(true);
+  const [isHeroTextActive, setIsHeroTextActive] = useState(skipIntro);
+  const [showWordmarkBurst, setShowWordmarkBurst] = useState(!skipIntro);
   const { reducedMotion } = usePointer();
 
   useEffect(() => {
@@ -207,9 +221,10 @@ export default function HeroSection() {
         gsap.set(root.querySelector('.wordmark-visual'), { x: 0, filter: 'blur(0px)' });
         gsap.set(terminalProgressFill, { scaleX: 1 });
         if (terminalProgressValue) terminalProgressValue.textContent = '100%';
+        onIntroComplete?.();
       };
 
-      if (reducedMotion) {
+      if (skipIntro || reducedMotion) {
         finalizeHero();
         return undefined;
       }
@@ -447,7 +462,7 @@ export default function HeroSection() {
   );
 
   return (
-    <section className="hero-section is-intro" id="top" ref={rootRef}>
+    <section className={`hero-section ${skipIntro ? 'is-ready' : 'is-intro'}`} id="top" ref={rootRef}>
       <CRTStage>
         <ShapeGrid
           borderColor="rgba(255,255,255,0.11)"
@@ -482,6 +497,8 @@ export default function HeroSection() {
               initialDelay={120}
               pauseDuration={1450}
               text={heroTypePhrases}
+              textSuffixes={heroTypeIcons}
+              suffixClassName="hero-subtitle__icon"
               typingSpeed={42}
               variableSpeed={{ min: 28, max: 72 }}
               variableSpeedEnabled

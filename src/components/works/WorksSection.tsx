@@ -66,7 +66,7 @@ export default function WorksSection() {
     <section aria-labelledby="works-title" className="works-section" id="works">
       <div className="works-grid">
         <div className="works-heading">
-          <p className="section-label works-label">[ ПРИМЕРЫ РАБОТ ]</p>
+          <p className="section-label works-label">[ 02 / ПРИМЕРЫ РАБОТ ]</p>
           <h2 id="works-title">Проекты, которые мы сделали для клиентов.</h2>
         </div>
 

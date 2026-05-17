@@ -33,6 +33,7 @@ function getDeveloperId(pathname: string): DeveloperId | undefined {
 export default function App() {
   const [pathname, setPathname] = useState(getKnownPathname);
   const [pendingSection, setPendingSection] = useState<HomeSection | null>(null);
+  const [hasPlayedHeroIntro, setHasPlayedHeroIntro] = useState(() => getKnownPathname() !== '/');
   const developerId = getDeveloperId(pathname);
   const isDeveloperPage = developerId !== undefined;
 
@@ -96,6 +97,7 @@ export default function App() {
 
   const navigateHomeSection = useCallback((section: HomeSection) => {
     if (window.location.pathname !== '/') {
+      setHasPlayedHeroIntro(true);
       window.history.pushState(null, '', '/');
       setPathname('/');
       setPendingSection(section);
@@ -121,9 +123,14 @@ export default function App() {
       window.history.pushState(null, '', nextPath);
     }
 
+    setHasPlayedHeroIntro(true);
     setPendingSection(null);
     setPathname(nextPath);
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, []);
+
+  const handleHeroIntroComplete = useCallback(() => {
+    setHasPlayedHeroIntro(true);
   }, []);
 
   return (
@@ -139,7 +146,7 @@ export default function App() {
         <main id="main" className="developer-page" aria-label="Страница разработчика" />
       ) : (
         <main id="main" className="app-main">
-          <HeroSection />
+          <HeroSection skipIntro={hasPlayedHeroIntro} onIntroComplete={handleHeroIntroComplete} />
           <AboutSection onNavigateDeveloper={navigateDeveloper} />
           <WorksSection />
           <ContactsSection />

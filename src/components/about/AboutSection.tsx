@@ -71,7 +71,7 @@ export default function AboutSection({ onNavigateDeveloper }: AboutSectionProps)
         </div>
 
         <div className="about-profile-copy">
-          <p className="section-label">[ РАЗРАБОТЧИКИ ]</p>
+          <p className="section-label">[ 01 / РАЗРАБОТЧИКИ ]</p>
           <h2>Два человека. Один цельный процесс.</h2>
           <p>
             Соединяем разработку, интерфейсы и визуальную систему, чтобы быстро превращать идеи в понятные цифровые
