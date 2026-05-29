@@ -27,7 +27,6 @@ export default function MaintenanceMode() {
         <p className="maintenance-panel__copy">
           Извините за неудобства. Мы обновляем систему и скоро вернем сайт в работу.
         </p>
-        <div className="maintenance-strip" aria-hidden="true" />
       </section>
     </main>
   );
