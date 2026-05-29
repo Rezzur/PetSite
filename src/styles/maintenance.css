@@ -171,6 +171,10 @@ body {
   text-transform: uppercase;
 }
 
+.maintenance-panel h1 span {
+  display: block;
+}
+
 .maintenance-panel__copy {
   max-width: 42rem;
   color: var(--text-muted);
@@ -180,22 +184,52 @@ body {
 
 @media (max-width: 640px) {
   .maintenance-page {
-    align-items: stretch;
-    padding: 16px;
+    place-items: center;
+    padding: 18px;
   }
 
   .maintenance-panel {
-    align-content: center;
-    min-height: calc(100svh - 32px);
+    width: min(100%, 430px);
+    min-height: auto;
+    gap: 18px;
+    padding: 30px 24px 32px;
+    background-size: 16px 16px, 16px 16px, auto;
   }
 
   .maintenance-wordmark {
-    display: grid;
-    gap: 0.08em;
+    display: flex;
+    gap: 0.2em;
+    font-size: clamp(1.36rem, 6.6vw, 1.95rem);
+    line-height: 1.02;
   }
 
   .maintenance-panel h1 {
-    max-width: 9ch;
+    max-width: 100%;
+    font-size: clamp(2rem, 9.3vw, 2.56rem);
+    line-height: 0.98;
+  }
+
+  .maintenance-panel__copy {
+    font-size: 0.94rem;
+    line-height: 1.56;
+  }
+}
+
+@media (max-width: 380px) {
+  .maintenance-page {
+    padding: 12px;
+  }
+
+  .maintenance-panel {
+    padding: 28px 18px 30px;
+  }
+
+  .maintenance-wordmark {
+    font-size: clamp(1.18rem, 6.3vw, 1.46rem);
+  }
+
+  .maintenance-panel h1 {
+    font-size: clamp(1.86rem, 10vw, 2.28rem);
   }
 }
 
