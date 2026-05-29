@@ -132,17 +132,6 @@ body {
   bottom: 14px;
 }
 
-.maintenance-panel__scanline {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--white), transparent);
-  box-shadow: 0 0 22px rgba(255, 255, 255, 0.38);
-  animation: maintenanceScan 4.8s linear infinite;
-}
-
 .maintenance-panel__eyebrow,
 .maintenance-panel h1,
 .maintenance-panel__copy,
@@ -187,16 +176,6 @@ body {
   color: var(--text-muted);
   font-size: clamp(0.98rem, 1.4vw, 1.12rem);
   line-height: 1.7;
-}
-
-@keyframes maintenanceScan {
-  0% {
-    transform: translateY(-1px);
-  }
-
-  100% {
-    transform: translateY(100svh);
-  }
 }
 
 @media (max-width: 640px) {

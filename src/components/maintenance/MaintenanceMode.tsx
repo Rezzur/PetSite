@@ -20,7 +20,6 @@ export default function MaintenanceMode() {
     <main className="maintenance-page" aria-labelledby="maintenance-title">
       <div className="maintenance-page__grid" aria-hidden="true" />
       <section className="maintenance-panel" role="status" aria-live="polite">
-        <div className="maintenance-panel__scanline" aria-hidden="true" />
         <p className="maintenance-panel__eyebrow">system / maintenance mode</p>
         <Wordmark />
         <h1 id="maintenance-title">Сайт находится на техническом обслуживании</h1>
