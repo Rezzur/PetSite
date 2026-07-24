@@ -1,0 +1,19 @@
+.git
+.vercel
+.vite
+.playwright-mcp
+node_modules
+dist
+Итоговые
+строительный мусор
+
+.DS_Store
+*.log
+*.tsbuildinfo
+about-desktop.png
+about-mobile.png
+about-mobile-photo.png
+
+.env
+.env.*
+!.env.example
