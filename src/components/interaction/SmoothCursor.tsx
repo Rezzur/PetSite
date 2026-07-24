@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 type SpringConfig = {
   damping: number;
@@ -193,9 +193,12 @@ function shouldUseTextCursor(
   isSelectingText: boolean,
   isSelectionPending = false
 ) {
+  // Once a real selection drag has started, keep the caret latched until pointerup.
+  // This must win over element hit-testing so crossing links or buttons cannot
+  // flicker the cursor back to the arrow mid-selection.
+  if (isSelectingText) return true;
   if (isEditableTextTarget(x, y)) return true;
   if (isCursorTextBlockedTarget(x, y)) return false;
-  if (isSelectingText) return true;
   // Native selectionchange can fire several times before a slow drag crosses the activation threshold.
   if (isSelectionPending) return false;
 
@@ -288,7 +291,7 @@ export default function SmoothCursor({
     locatePulseUntil: 0
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = cursorRef.current;
 
     if (!enabled || !element) {
@@ -527,7 +530,7 @@ export default function SmoothCursor({
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('pointerup', handlePointerUp);
     window.addEventListener('pointercancel', handlePointerUp);
-    document.addEventListener('selectionchange', updateTextMode);
+    document.addEventListener('selectionchange', scheduleTextModeUpdate);
     window.addEventListener('scroll', scheduleTextModeUpdate, { capture: true, passive: true });
     window.addEventListener('resize', scheduleTextModeUpdate, { passive: true });
     window.addEventListener('pointerleave', hideCursor);
@@ -539,7 +542,7 @@ export default function SmoothCursor({
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
       window.removeEventListener('pointercancel', handlePointerUp);
-      document.removeEventListener('selectionchange', updateTextMode);
+      document.removeEventListener('selectionchange', scheduleTextModeUpdate);
       window.removeEventListener('scroll', scheduleTextModeUpdate, true);
       window.removeEventListener('resize', scheduleTextModeUpdate);
       window.removeEventListener('pointerleave', hideCursor);

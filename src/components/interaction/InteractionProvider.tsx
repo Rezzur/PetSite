@@ -38,7 +38,11 @@ export function InteractionProvider({ children }: InteractionProviderProps) {
     lastClickAt: 0
   });
   const reducedMotion = usePrefersReducedMotion();
-  const [finePointer, setFinePointer] = useState(false);
+  const [finePointer, setFinePointer] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(any-hover: hover) and (any-pointer: fine)').matches
+      : false
+  );
 
   useEffect(() => {
     const query = window.matchMedia('(any-hover: hover) and (any-pointer: fine)');

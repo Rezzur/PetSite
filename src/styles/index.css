@@ -58,11 +58,17 @@ a {
   font-family: inherit;
 }
 
-@media (any-hover: hover) and (any-pointer: fine) {
-  html.has-smooth-cursor,
-  html.has-smooth-cursor * {
-    cursor: none !important;
-  }
+html.has-smooth-cursor,
+html.has-smooth-cursor body,
+html.has-smooth-cursor *,
+html.has-smooth-cursor *::before,
+html.has-smooth-cursor *::after {
+  cursor: none !important;
+}
+
+html.has-smooth-cursor a,
+html.has-smooth-cursor button {
+  -webkit-user-drag: none;
 }
 
 .smooth-cursor {
