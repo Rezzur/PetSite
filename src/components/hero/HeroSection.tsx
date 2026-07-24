@@ -133,27 +133,27 @@ export default function HeroSection({ skipIntro = false, onIntroComplete }: Hero
             terminal: 0.22,
             boot: 0.42,
             progress: 0.72,
-            progressEnd: 3.68,
-            commands: 1.06,
-            post: 3.88,
-            cross: 4.4,
-            letters: 4.72,
-            stabilize: 5.16,
-            layout: 5.56,
-            end: 6.08
+            progressEnd: 2.02,
+            commands: 0.82,
+            post: 2.16,
+            cross: 2.44,
+            letters: 2.68,
+            stabilize: 2.98,
+            layout: 3.18,
+            end: 3.72
           }
         : {
-            terminal: 0.35,
-            boot: 0.88,
-            progress: 1.1,
-            progressEnd: 4.86,
-            commands: 2.02,
-            post: 5.08,
-            cross: 5.86,
-            letters: 6.28,
-            stabilize: 6.88,
-            layout: 7.32,
-            end: 8.08
+            terminal: 0.24,
+            boot: 0.52,
+            progress: 0.78,
+            progressEnd: 2.82,
+            commands: 1.1,
+            post: 3.02,
+            cross: 3.34,
+            letters: 3.66,
+            stabilize: 3.98,
+            layout: 4.22,
+            end: 4.86
           };
       const identity = root.querySelector<HTMLElement>('.hero-identity');
       const copy = root.querySelector<HTMLElement>('.hero-copy');
@@ -170,6 +170,12 @@ export default function HeroSection({ skipIntro = false, onIntroComplete }: Hero
       let releaseInitialScroll: (() => void) | undefined;
       let fallbackTimer: number | undefined;
       let finalized = false;
+
+      const makeHeroInteractive = () => {
+        root.classList.add('is-nav-ready');
+        releaseInitialScroll?.();
+        releaseInitialScroll = undefined;
+      };
 
       const getIntroTransform = () => {
         if (!identity || mobile) return { x: 0, y: 0, scale: 1 };
@@ -199,7 +205,7 @@ export default function HeroSection({ skipIntro = false, onIntroComplete }: Hero
         releaseInitialScroll?.();
         releaseInitialScroll = undefined;
         root.classList.remove('is-intro');
-        root.classList.add('is-ready');
+        root.classList.add('is-ready', 'is-nav-ready');
         setIsHeroTextActive(true);
         setShowWordmarkBurst(false);
         letters.forEach((letter) => {
@@ -236,7 +242,7 @@ export default function HeroSection({ skipIntro = false, onIntroComplete }: Hero
       releaseInitialScroll = lockInitialScroll();
 
       root.classList.add('is-intro');
-      root.classList.remove('is-ready');
+      root.classList.remove('is-ready', 'is-nav-ready');
       setIsHeroTextActive(false);
       setShowWordmarkBurst(true);
       gsap.set(root.querySelectorAll('.hero-entrance'), { opacity: 0, y: 12 });
@@ -447,6 +453,7 @@ export default function HeroSection({ skipIntro = false, onIntroComplete }: Hero
         .to(introTerminal, { autoAlpha: 0, y: mobile ? -6 : -10, duration: 0.24 }, timing.layout - 0.08)
         .to(identity, { x: 0, y: 0, scale: 1, duration: mobile ? 0.42 : 0.74, ease: 'expo.out' }, timing.layout)
         .to(root.querySelector('.hero-eyebrow'), { opacity: 1, y: 0, duration: mobile ? 0.36 : 0.48 }, timing.layout + 0.08)
+        .call(makeHeroInteractive, [], timing.layout + 0.1)
         .call(() => setIsHeroTextActive(true), [], timing.layout + 0.14)
         .to(copy, { autoAlpha: 1, x: 0, y: 0, duration: mobile ? 0.44 : 0.58, ease: 'power3.out' }, timing.layout + 0.18)
         .to(root.querySelectorAll('.hero-copy .hero-entrance'), { opacity: 1, y: 0, stagger: mobile ? 0.09 : 0.12, duration: mobile ? 0.42 : 0.52 }, timing.layout + 0.22)
@@ -485,8 +492,10 @@ export default function HeroSection({ skipIntro = false, onIntroComplete }: Hero
             </div>
           </div>
           <div className="hero-copy">
+            <p className="sr-only">
+              SMIRNOV × ZYRYANOV создает сайты, приложения, интерфейсы и цифровой дизайн.
+            </p>
             <TextType
-              aria-live="polite"
               as="p"
               className="hero-subtitle hero-entrance"
               cursorCharacter="▎"
@@ -503,6 +512,9 @@ export default function HeroSection({ skipIntro = false, onIntroComplete }: Hero
               variableSpeed={{ min: 28, max: 72 }}
               variableSpeedEnabled
             />
+            <p className="hero-value-line hero-entrance">
+              Запускаем сайты, интерфейсы и веб-приложения с продуманной визуальной системой и живым фронтендом.
+            </p>
             <div className="hero-actions hero-entrance">
               <PixelTransitionButton href="#contacts">Обсудить проект</PixelTransitionButton>
             </div>

@@ -1,5 +1,6 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { brand } from '../../data/brand';
 
 type ActiveZone = 'top' | 'developers' | 'works' | 'contacts';
@@ -58,6 +59,7 @@ export default function TopAsciiBar({
   const developersCloseTimerRef = useRef<number | undefined>(undefined);
   const flashTimerRef = useRef<number | undefined>(undefined);
   const isReady = page === 'developer' || isHeroReady;
+  const developerItemRefs = useRef<Partial<Record<DeveloperId, HTMLButtonElement | null>>>({});
 
   const updateDevelopersMenuBounds = () => {
     const button = developersButtonRef.current;
@@ -115,7 +117,7 @@ export default function TopAsciiBar({
     }
 
     const syncReadyState = () => {
-      setIsHeroReady(hero.classList.contains('is-ready'));
+      setIsHeroReady(hero.classList.contains('is-ready') || hero.classList.contains('is-nav-ready'));
     };
 
     syncReadyState();
@@ -248,6 +250,20 @@ export default function TopAsciiBar({
     }
   };
 
+  const focusFirstDeveloperItem = () => {
+    window.requestAnimationFrame(() => {
+      developerItemRefs.current.yan?.focus();
+    });
+  };
+
+  const openDevelopersMenuFromKeyboard = (event: ReactKeyboardEvent<HTMLButtonElement>) => {
+    if (event.key !== 'Enter' && event.key !== ' ' && event.key !== 'ArrowDown') return;
+
+    event.preventDefault();
+    openDevelopersMenu();
+    focusFirstDeveloperItem();
+  };
+
   const scheduleDevelopersMenuClose = () => {
     if (developersCloseTimerRef.current !== undefined) window.clearTimeout(developersCloseTimerRef.current);
     developersCloseTimerRef.current = window.setTimeout(() => setIsDevelopersMenuOpen(false), 120);
@@ -278,6 +294,7 @@ export default function TopAsciiBar({
     <header
       aria-hidden={isReady ? undefined : true}
       className="top-ascii-bar"
+      data-cursor-text="off"
       data-page={page}
       data-ready={isReady ? 'true' : 'false'}
     >
@@ -334,6 +351,7 @@ export default function TopAsciiBar({
                   ref={developersButtonRef}
                   type="button"
                   onClick={() => goTo(item.id)}
+                  onKeyDown={openDevelopersMenuFromKeyboard}
                 >
                   <BracketedLabel label={item.label} />
                   <span className="top-ascii-bar__chevron" aria-hidden="true">
@@ -348,6 +366,7 @@ export default function TopAsciiBar({
         </nav>
 
         <button
+          aria-label="Меню"
           aria-controls="top-ascii-menu"
           aria-expanded={isMenuOpen}
           className="top-ascii-bar__menu-button"
@@ -355,7 +374,7 @@ export default function TopAsciiBar({
           type="button"
           onClick={() => setIsMenuOpen((value) => !value)}
         >
-          <BracketedLabel label="menu" />
+          <BracketedLabel label="Меню" />
         </button>
       </div>
 
@@ -426,6 +445,9 @@ export default function TopAsciiBar({
             }`.trim()}
             disabled={!isReady}
             key={developer.id}
+            ref={(node) => {
+              developerItemRefs.current[developer.id] = node;
+            }}
             role="menuitem"
             type="button"
             onClick={() => goDeveloper(developer.id)}

@@ -1,3 +1,9 @@
+export function getPreferredScrollBehavior(behavior: ScrollBehavior = 'smooth') {
+  if (behavior !== 'smooth') return behavior;
+
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : behavior;
+}
+
 export function scrollToPageSection(hash: string, behavior: ScrollBehavior = 'smooth') {
   if (!hash.startsWith('#')) return false;
 
@@ -9,7 +15,7 @@ export function scrollToPageSection(hash: string, behavior: ScrollBehavior = 'sm
   const topOffset = window.matchMedia('(max-width: 760px)').matches ? 76 : 86;
   const targetTop = target.getBoundingClientRect().top + window.scrollY - topOffset;
 
-  window.scrollTo({ top: Math.max(0, targetTop), behavior });
+  window.scrollTo({ top: Math.max(0, targetTop), behavior: getPreferredScrollBehavior(behavior) });
   window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${hash}`);
   window.dispatchEvent(new CustomEvent('page-section-scroll', { detail: { id } }));
 

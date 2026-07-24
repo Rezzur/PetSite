@@ -1,4 +1,4 @@
-import { ArrowRight, Maximize2, Minus, X } from 'lucide-react';
+import { ArrowRight, Mail, Maximize2, Minus, Send, X } from 'lucide-react';
 import { brand } from '../../data/brand';
 import ClickSpark from '../hero/ClickSpark';
 import { MagneticSurface } from '../interaction/MagneticSurface';
@@ -32,6 +32,17 @@ export default function ContactsSection() {
             <p className="contacts-intro">
               Расскажите о задаче — предложим подход и соберём решение, которое работает.
             </p>
+
+            <div className="contacts-direct-actions" aria-label="Быстрые контакты">
+              <a href={telegramHref} rel="noreferrer" target="_blank">
+                <Send aria-hidden="true" size={17} strokeWidth={1.8} />
+                <span>Telegram</span>
+              </a>
+              <a href={`mailto:${email}`}>
+                <Mail aria-hidden="true" size={17} strokeWidth={1.8} />
+                <span>Email</span>
+              </a>
+            </div>
 
             <article className="contacts-terminal" aria-label="Контактный терминал">
               <div className="contacts-terminal__actions" aria-hidden="true">

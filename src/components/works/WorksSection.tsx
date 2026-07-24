@@ -12,8 +12,6 @@ type ProjectCard = {
   description: string;
   image: string;
   imageAlt: string;
-  logo?: string;
-  logoAlt?: string;
   siteHref?: string;
   sourceHref?: string;
 };
@@ -56,7 +54,7 @@ const projects: ProjectCard[] = [
     type: 'Android-приложение для учета запасов',
     description: 'Мобильное приложение помогает вести учет продуктов и автоматически формирует список покупок по минимальному остатку. Работает офлайн и хранит данные на устройстве.',
     image: pantryFlowLogo,
-    imageAlt: 'Логотип Android-приложения Pantry Flow',
+    imageAlt: 'Иконка Android-приложения Pantry Flow',
     sourceHref: 'https://github.com/Maks-Troshin/Maks-Troshin-PantryFlow'
   }
 ];
@@ -75,11 +73,6 @@ export default function WorksSection() {
             <article className={`work-project-card work-project-card--${project.id}`} key={project.id}>
               <div className={`work-preview work-preview--shot work-preview--${project.id}`}>
                 <img className="work-preview__image" alt={project.imageAlt} loading="lazy" src={project.image} />
-                {project.logo ? (
-                  <div className="work-preview__logo-badge">
-                    <img alt={project.logoAlt ?? `${project.title} logo`} src={project.logo} />
-                  </div>
-                ) : null}
               </div>
 
               <div className="work-project-card__title-row">
@@ -94,14 +87,26 @@ export default function WorksSection() {
 
               <div className="work-project-card__actions" aria-label="Ссылки проекта">
                 {project.sourceHref ? (
-                  <a className="work-project-card__button" href={project.sourceHref} rel="noreferrer" target="_blank">
+                  <a
+                    aria-label={`Открыть исходный код ${project.title} в новой вкладке`}
+                    className="work-project-card__button"
+                    href={project.sourceHref}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <Code2 aria-hidden="true" size={19} strokeWidth={1.8} />
                     <span>Исходный код</span>
                   </a>
                 ) : null}
 
                 {project.siteHref ? (
-                  <a className="work-project-card__button" href={project.siteHref} rel="noreferrer" target="_blank">
+                  <a
+                    aria-label={`Открыть сайт ${project.title} в новой вкладке`}
+                    className="work-project-card__button"
+                    href={project.siteHref}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <span>Сайт</span>
                     <ExternalLink aria-hidden="true" size={18} strokeWidth={1.8} />
                   </a>

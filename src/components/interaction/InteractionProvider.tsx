@@ -1,5 +1,6 @@
 import { createContext, type MutableRefObject, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import SmoothCursor from './SmoothCursor';
 
 export type PointerState = {
   x: number;
@@ -40,7 +41,7 @@ export function InteractionProvider({ children }: InteractionProviderProps) {
   const [finePointer, setFinePointer] = useState(false);
 
   useEffect(() => {
-    const query = window.matchMedia('(pointer: fine)');
+    const query = window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
     const update = () => setFinePointer(query.matches);
 
     update();
@@ -119,6 +120,7 @@ export function InteractionProvider({ children }: InteractionProviderProps) {
     <InteractionContext.Provider value={value}>
       <div className="interaction-root" ref={rootRef}>
         {children}
+        <SmoothCursor enabled={finePointer && !reducedMotion} />
       </div>
     </InteractionContext.Provider>
   );
