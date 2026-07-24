@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import MaintenanceMode from './components/maintenance/MaintenanceMode';
-import './styles/maintenance.css';
+import App from './App';
+import './styles/index.css';
 
-createRoot(document.getElementById('root')!).render(<MaintenanceMode />);
+createRoot(document.getElementById('root')!).render(<App />);
